@@ -2,11 +2,13 @@ package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface DriveIO {
+public interface ModuleIO{
 
     @AutoLog
-    class DriveIOInputs{
+    class ModuleIOInputs{
         public double volts = 0.0;
         public double current = 0.0;
+
     }
 }
+
