@@ -1,4 +1,5 @@
 package frc.robot.subsystems.drive;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -15,13 +16,6 @@ public interface ModuleIO{
         public double driveAppliedVolts = 0.0;
         public double driveCurrentAmps = 0.0;
 
-        public boolean turnConnected = false;
-        public Rotation2d turnPosition = Rotation2d.kZero;
-        public double turnVelocityRadPerSec = 0.0;
-        public double turnAppliedVolts = 0.0;
-        public double turnCurrentAmps = 0.0;
-
-        public double turnPositionAbsolute = 0.0;
 
         public double[] odometryTimestamps = new double[] {};
         public double[] odometryDrivePositionsRad = new double[] {};
