@@ -22,6 +22,10 @@ public interface DriveIO {
 
     default void setVoltageRight(double rightAppliedVolts){}
 
+    default void setVelocityRadPerSecL(double leftVelocityRadPerSec){}
+
+    default void setVelocityRadPerSecR(double rightVelocityRadPerSec){}
+
 
 
 }
