@@ -6,7 +6,22 @@ public interface DriveIO {
 
     @AutoLog
     class DriveIOInputs{
-        public double volts = 0.0;
-        public double current = 0.0;
+        public double leftAppliedVolts = 0.0;
+        public double leftCurrentAmps = 0.0;
+        public double leftVelocityRadPerSec = 0.0;
+
+        public double rightAppliedVolts = 0.0;
+        public double rightCurrentAmps = 0.0;
+        public double rightVelocityRadPerSec = 0.0;
+
+
     }
+    default void updateInputs(DriveIOInputs inputs){}
+
+    default void setVoltageLeft(double leftAppliedVolts){}
+
+    default void setVoltageRight(double rightAppliedVolts){}
+
+
+
 }
