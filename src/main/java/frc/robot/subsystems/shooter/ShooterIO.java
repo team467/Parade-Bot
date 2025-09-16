@@ -4,6 +4,6 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
     @AutoLog
-    class CoralEffectorIOInputs {
+    class ShooterIOInputs {
     }
 }
