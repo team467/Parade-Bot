@@ -1,4 +1,13 @@
-package frc.robot.subsystems.shindexer;
+package frc.robot.subsystems.indexer;
 
-public class ShindexerConstants {
+public class IndexerConstants {
+
+    public static final double INDEX_PERCENT = 0.5;
+
+    //Ask Electrical
+    public static final int INDEXER_MOTOR_ID = 0;   
+
+    public static final double ENCODER_POSITION_CONVERSION = 1.0; 
+
+    public static final double ENCODER_VELOCITY_CONVERSION = 1.0; 
 }
