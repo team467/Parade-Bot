@@ -54,9 +54,12 @@ public class IndexerIOSparkMax implements IndexerIO {
         motor.set(percent);
     }
 
+    public void setVoltage(double volts) {
+        motor.setVoltage(volts);
+    }
     @Override
     public void stop() {
-        motor.stopMotor();
+        motor.set(0);
     }
 
     public boolean isSwitchPressed() {

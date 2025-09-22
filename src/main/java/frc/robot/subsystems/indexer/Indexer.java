@@ -20,7 +20,7 @@ public class Indexer extends SubsystemBase {
     }
 
   public Command stop() {
-    return Commands.runOnce(io::stop, this);
+    return Commands.runOnce(() ->{io.stop();}, this);
   }
 
   public Command indexUntilSwitch() {
@@ -28,4 +28,12 @@ public class Indexer extends SubsystemBase {
         .until(io::isSwitchPressed)
         .finallyDo(interrupted -> io.stop());
   }
+
+    public Command indexIntoShooter() {
+        double targetPosition = inputs.position + IndexerConstants.SHOOTER_ROTATIONS;
+        return Commands.run(() -> io.setPercent(IndexerConstants.INDEX_PERCENT), this)
+                .until(() -> inputs.position >= targetPosition)
+                .finallyDo(interrupted -> io.stop());
+    }
+
 }
