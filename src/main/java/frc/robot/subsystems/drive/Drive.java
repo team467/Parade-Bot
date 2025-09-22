@@ -4,11 +4,8 @@ package frc.robot.subsystems.drive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase {
-DoubleConsumer setLeftDriveVoltage;
-DoubleConsumer setRightDriveVoltage 
-
-    public Drive(DriveIO io){
-        setLeftDriveVoltage = (voltage) -> DriveIO.setVoltageLeft(voltage);
-        setRightDriveVoltage = (voltage) -> DriveIO.setVoltageRight(voltage);
+private final DifferentialDrive differentialDrive;
+    public Drive(DriveIO io, DoubleSupplier joystickX, DoubleSupplier joystickY){
+        differentialDrive = new DifferentialDrive(io::setVoltageLeft, io::setVoltageRight);
     }
 }
