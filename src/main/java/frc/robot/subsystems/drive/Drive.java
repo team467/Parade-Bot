@@ -5,7 +5,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase {
 private final DifferentialDrive differentialDrive;
-    public Drive(DriveIO io, DoubleSupplier joystickX, DoubleSupplier joystickY){
+    public Drive(DriveIO io){
         differentialDrive = new DifferentialDrive(io::setVoltageLeft, io::setVoltageRight);
     }
+    public Command curvatureDrive(DoubleSupplier speedX, DoubleSupplier rotationZ, BooleanSupplier turnInPlace) {
+     return differentialDrive.curvatureDrive(speedX.getAsDouble(), rotationZ.getAsDouble(), turnInPlace.getAsBoolean());
+    }
+
 }
