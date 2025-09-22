@@ -4,6 +4,8 @@ package frc.robot.subsystems.drive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 public class Drive extends SubsystemBase {
 private final DifferentialDrive differentialDrive;
