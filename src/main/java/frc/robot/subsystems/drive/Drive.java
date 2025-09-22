@@ -15,15 +15,15 @@ public class Drive extends SubsystemBase {
         this.io = io;
         differentialDrive = new DifferentialDrive(io::setVoltageLeft, io::setVoltageRight);
     }
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("Drive", inputs);
+    }
     public Command curvatureDrive(DoubleSupplier speedX, DoubleSupplier rotationZ, BooleanSupplier turnInPlace) {
         return Commands.run(
             () -> {
                 differentialDrive.curvatureDrive(speedX.getAsDouble(), rotationZ.getAsDouble(), turnInPlace.getAsBoolean());
             }, this);
-    }
-    @Override
-    public void periodic() {
-        io.updateInputs(inputs);
-        Logger.processInputs("Drive", inputs);
     }
 }
