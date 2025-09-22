@@ -19,7 +19,7 @@ public class IndexerIOSparkMax implements IndexerIO {
     private final SparkLimitSwitch limitSwitch;
 
     public IndexerIOSparkMax() {
-        motor = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushless);
+        motor = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushed);
 
         var config = new SparkMaxConfig();
         config.inverted(false)                       
