@@ -17,8 +17,9 @@ public class Drive extends SubsystemBase {
     }
     public Command curvatureDrive(DoubleSupplier speedX, DoubleSupplier rotationZ, BooleanSupplier turnInPlace) {
         return Commands.run(
-            () -> differentialDrive.curvatureDrive(speedX.getAsDouble(), rotationZ.getAsDouble(), turnInPlace.getAsBoolean());
-        );
+            () -> {
+                differentialDrive.curvatureDrive(speedX.getAsDouble(), rotationZ.getAsDouble(), turnInPlace.getAsBoolean());
+            }, this);
     }
     @Override
     public void periodic() {
