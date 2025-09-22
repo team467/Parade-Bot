@@ -11,6 +11,7 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
     private final DriveIO io;
     private final DifferentialDrive differentialDrive;
+    private DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
     public Drive(DriveIO io){
         this.io = io;
         differentialDrive = new DifferentialDrive(io::setVoltageLeft, io::setVoltageRight);
