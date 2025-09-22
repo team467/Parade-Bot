@@ -5,7 +5,7 @@ public class IndexerConstants {
     public static final double INDEX_PERCENT = 0.5;
 
     //Ask Electrical
-    public static final int INDEXER_MOTOR_ID = 0;   
+    public static final int INDEXER_MOTOR_ID = 7;
 
     public static final double ENCODER_POSITION_CONVERSION = 1.0; 
 
