@@ -28,11 +28,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command stop() {
-        return Commands.runOnce(
-                () -> {
-                    io.setSpeed(0);
-                },
-                this);
+        return Commands.runOnce(() ->{io.stop();}, this);
     }
 
     public Command speedUp() {
