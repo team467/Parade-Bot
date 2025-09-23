@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIOSparkMax;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.shooter.ShooterIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,10 +29,10 @@ import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
+  private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController operatorController = new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,11 +50,29 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-      driverController.a().onTrue(indexer.indexUntilSwitch());
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+      driverController
+          .rightTrigger()
+          .whileTrue(
+              Commands.parallel(
+                   shooter.speedUp(),
+                   Commands.sequence(
+                        Commands.either(
+                            indexer.indexUntilSwitch(),
+                            Commands.none(),
+                                () -> !indexer.hasBall()
+                        ),
+                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
+                        indexer.indexIntoShooter(),
+                        Commands.either(
+                            indexer.indexUntilSwitch(),
+                            Commands.none(),
+                            () -> !indexer.hasBall()
+                        )
+                    )
+                     .repeatedly()
+              )
+          )
+              .onFalse(Commands.parallel(shooter.stop(), indexer.stop()));
   }
 
   /**
