@@ -19,11 +19,11 @@ public class DriveIOSparkMax implements DriveIO{
 
 
     public DriveIOSparkMax(){
-        leftLeader = new SparkMax(1, SparkLowLevel.MotorType.kBrushless);
-        leftFollower = new SparkMax(2, SparkLowLevel.MotorType.kBrushless);
+        leftLeader = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
+        leftFollower = new SparkMax(4, SparkLowLevel.MotorType.kBrushless);
         leftLeaderEncoder = leftLeader.getEncoder();
-        rightLeader = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
-        rightFollower = new SparkMax(4, SparkLowLevel.MotorType.kBrushless);
+        rightLeader = new SparkMax(5, SparkLowLevel.MotorType.kBrushless);
+        rightFollower = new SparkMax(6, SparkLowLevel.MotorType.kBrushless);
         rightLeaderEncoder  = rightLeader.getEncoder();
 
         var LeftLeaderConfig = new SparkMaxConfig();
