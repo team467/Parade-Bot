@@ -17,6 +17,8 @@ public interface IndexerIO {
 
     default void setPercent(double percent) {}
 
+    default void setVoltage(double volts) {}
+
     default void stop() {}
 
     default boolean isSwitchPressed() {
