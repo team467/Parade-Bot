@@ -12,7 +12,6 @@ public interface ShooterIO {
         public double currentAmps;
         public double temperature;
         public boolean readyToShoot = false;
-        public boolean hasBall = false;
     }
 
     default void updateInputs(ShooterIOInputs inputs) {}

@@ -27,10 +27,6 @@ public class Shooter extends SubsystemBase {
         return inputs.readyToShoot;
     }
 
-    public boolean hasBall(){
-        return inputs.hasBall;
-    }
-
     public Command stop() {
         return Commands.runOnce(
                 () -> {

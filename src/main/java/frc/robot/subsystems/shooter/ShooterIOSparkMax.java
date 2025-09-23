@@ -16,10 +16,9 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     private final SparkMax motor;
     private final RelativeEncoder encoder;
-    private final SparkLimitSwitch limitSwitch;
 
     public ShooterIOSparkMax() {
-        motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushed);
+        motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
 
         var config = new SparkMaxConfig();
         config.inverted(false)
@@ -36,7 +35,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
         encoder = motor.getEncoder();
 
-        limitSwitch = motor.getForwardLimitSwitch();
     }
 
     @Override
@@ -45,7 +43,6 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
         inputs.velocity = encoder.getVelocity();
-        inputs.hasBall = limitSwitch.isPressed();
     }
 
     public void setPercent(double percent) {
@@ -58,9 +55,5 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     public void stop() {
         motor.set(0);
-    }
-
-    public boolean isSwitchPressed() {
-        return limitSwitch.isPressed();
     }
 }
