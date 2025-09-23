@@ -18,6 +18,9 @@ public class Indexer extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
     }
+    public boolean hasBall() {
+        return inputs.ballAtSwitch;
+    }
 
   public Command stop() {
     return Commands.runOnce(() ->{io.stop();}, this);
