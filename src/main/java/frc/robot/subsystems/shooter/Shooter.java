@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
                 this);
     }
 
-    public Command shoot() {
+    public Command speedUp() {
         return Commands.runOnce(
                 () -> {
                     io.setSpeed(ShooterConstants.SPEED);
