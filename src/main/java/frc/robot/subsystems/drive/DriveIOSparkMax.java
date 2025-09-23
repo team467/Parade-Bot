@@ -17,8 +17,6 @@ public class DriveIOSparkMax implements DriveIO{
     private final RelativeEncoder leftLeaderEncoder;
     private final RelativeEncoder rightLeaderEncoder;
 
-    private final SparkClosedLoopController leftLeaderController;
-    private final SparkClosedLoopController rightLeaderController;
 
     public DriveIOSparkMax(){
         leftLeader = new SparkMax(1, SparkLowLevel.MotorType.kBrushless);
