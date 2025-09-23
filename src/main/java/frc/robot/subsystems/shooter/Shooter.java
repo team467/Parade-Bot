@@ -36,13 +36,14 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command speedUp() {
-        return Commands.runOnce(
+        return Commands.run(
                 () -> {
                     io.setSpeed(ShooterConstants.SPEED);
                 },
                 this
         );
     }
+
 
 }
 
