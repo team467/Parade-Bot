@@ -8,13 +8,21 @@ public interface ShooterIO {
     class ShooterIOInputs {
 
         public double velocity;
+
         public double appliedVolts;
+
         public double currentAmps;
+
         public double temperature;
+
         public boolean readyToShoot = false;
     }
 
     default void updateInputs(ShooterIOInputs inputs) {}
 
+    default void setPercent(double percent) {}
+
     default void setSpeed(double speed) {}
+
+    default void stop() {}
 }
