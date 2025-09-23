@@ -10,5 +10,5 @@ public class ShooterConstants {
 
     public static final double ENCODER_VELOCITY_CONVERSION = 1.0;
 
-    public static final double SHOOTER_ROTATIONS = 0.0;
+    public static final double SPINUP_SECONDS = 0.75;
 }
