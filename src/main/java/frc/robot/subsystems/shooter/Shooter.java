@@ -23,10 +23,6 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
-    public boolean readyToShoot(){
-        return inputs.readyToShoot;
-    }
-
     public Command stop() {
         return Commands.runOnce(() ->{io.stop();}, this);
     }
@@ -40,18 +36,5 @@ public class Shooter extends SubsystemBase {
         );
     }
 
-    /*
-    //added to reverse motors if ball is jammed
-    public Command reverse() {
-        return Commands.startEnd(
-                ()->io.setPercent(-0.25),
-                ()->io.setPercent(0),
-                this
-        );
-    }
-    */
-
-
 
 }
-
