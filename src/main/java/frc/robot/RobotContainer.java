@@ -4,10 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.drive.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,9 +43,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drive.setDefaultCommand(drive.curvatureDrive(
-    () -> driverController.getLeftY().getAsDouble(),
-    () -> driverController.getLeftX().getAsDouble(),
-    () -> driverController.a().getAsBoolean()))；
+    drive.setDefaultCommand(drive.arcadeDrive(
+            driverController::getLeftY,
+            driverController::getRightX));
+  }
+  public Command getAutonomousCommand() {
+    return Commands.none();
   }
 }
