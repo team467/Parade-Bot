@@ -74,12 +74,12 @@ public class RobotContainer {
           )
               .onFalse(Commands.parallel(shooter.stop(), indexer.stop()));
 
-      
+
       /*
         Hold left trigger → run both shooter + indexer backwards.
 
         Release → stop both immediately.
-       */
+
       driverController
             .leftTrigger()
               .whileTrue(
@@ -91,7 +91,7 @@ public class RobotContainer {
                       indexer.stop()
               ));
 
-
+        */
 
 
 

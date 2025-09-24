@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    /*
     //added to reverse motors if ball is jammed
     public Command reverse() {
         return Commands.startEnd(
@@ -48,6 +49,8 @@ public class Shooter extends SubsystemBase {
                 this
         );
     }
+    */
+
 
 
 }

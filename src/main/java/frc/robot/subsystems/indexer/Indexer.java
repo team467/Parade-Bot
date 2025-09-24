@@ -39,7 +39,7 @@ public class Indexer extends SubsystemBase {
                 .finallyDo(interrupted -> io.stop());
     }
 
-
+    /*
     //added to reverse motors if ball is jammed
     public Command reverse() {
         return Commands.startEnd(
@@ -48,5 +48,7 @@ public class Indexer extends SubsystemBase {
                 this
         );
     }
+
+     */
 
 }
