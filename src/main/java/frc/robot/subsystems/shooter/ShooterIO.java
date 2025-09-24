@@ -22,7 +22,7 @@ public interface ShooterIO {
 
     default void setPercent(double percent) {}
 
-    default void setSpeed(double speed) {}
+
 
     default void stop() {}
 }

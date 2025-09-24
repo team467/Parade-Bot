@@ -18,7 +18,7 @@ import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
-import frc.robot.subsystems.shooter.ShooterConstants;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

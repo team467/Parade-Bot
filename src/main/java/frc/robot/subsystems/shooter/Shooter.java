@@ -34,7 +34,7 @@ public class Shooter extends SubsystemBase {
     public Command speedUp() {
         return Commands.run(
                 () -> {
-                    io.setSpeed(ShooterConstants.SPEED);
+                    io.setPercent(ShooterConstants.SPEED);
                 },
                 this
         );
