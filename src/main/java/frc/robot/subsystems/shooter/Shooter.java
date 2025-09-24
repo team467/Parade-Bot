@@ -27,6 +27,16 @@ public class Shooter extends SubsystemBase {
         return Commands.runOnce(() ->{io.stop();}, this);
     }
 
+    /*\
+    public edu.wpi.first.wpilibj2.command.Command reverse() {
+        return edu.wpi.first.wpilibj2.command.Commands.startEnd(
+            () -> io.setPercent(-0.25),   // reverse at 25% (tweak if needed)
+            () -> io.setPercent(0),       // stop when released
+            this
+         );
+}
+*/
+
     public Command speedUp() {
         return Commands.run(
                 () -> {

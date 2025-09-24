@@ -72,6 +72,20 @@ public class RobotContainer {
                         )
                 )
                 .onFalse(Commands.parallel(shooter.stop(), indexer.stop()));
+
+        /*
+        driverController.leftTrigger()
+                .whileTrue(edu.wpi.first.wpilibj2.command.Commands.parallel(
+                        shooter.reverse(),
+                        indexer.reverse()
+                ))
+                .onFalse(edu.wpi.first.wpilibj2.command.Commands.parallel(
+                        shooter.stop(),
+                        indexer.stop()
+                ));
+
+           
+         */
     }
 
     /**
@@ -79,6 +93,7 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
+
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
         return Commands.none();
