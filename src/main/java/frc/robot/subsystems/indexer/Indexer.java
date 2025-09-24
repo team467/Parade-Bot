@@ -38,13 +38,13 @@ public class Indexer extends SubsystemBase {
                 .until(() -> inputs.position >= targetPosition)
                 .finallyDo(interrupted -> io.stop());
     }
-    /*
-    public edu.wpi.first.wpilibj2.command.Command reverse() {
-        return edu.wpi.first.wpilibj2.command.Commands.startEnd(
-                () -> io.setPercent(-0.4),   // reverse at 40% (tweak if needed)
+
+    public Command reverse() {
+        return Commands.startEnd(
+                () -> io.setPercent(IndexerConstants.REVERSE_INDEX_PERCENT),
                 () -> io.setPercent(0),
                 this
         );
     }
-   */
+
 }

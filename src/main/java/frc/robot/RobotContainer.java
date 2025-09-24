@@ -76,19 +76,21 @@ public class RobotContainer {
                         )
                         ));
 
-        /*
+
         driverController.leftTrigger()
-                .whileTrue(edu.wpi.first.wpilibj2.command.Commands.parallel(
+                .whileTrue(
+                        Commands.parallel(
                         shooter.reverse(),
                         indexer.reverse()
                 ))
-                .onFalse(edu.wpi.first.wpilibj2.command.Commands.parallel(
+                .onFalse(
+                        Commands.parallel(
                         shooter.stop(),
                         indexer.stop()
                 ));
 
            
-         */
+
 
         driverController
                 .rightBumper()
