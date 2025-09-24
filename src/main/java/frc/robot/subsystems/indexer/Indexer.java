@@ -22,31 +22,21 @@ public class Indexer extends SubsystemBase {
         return inputs.ballAtSwitch;
     }
 
-  public Command stop() {
-    return Commands.runOnce(() ->{io.stop();}, this);
-  }
+    public Command stop() {
+        return Commands.runOnce(() ->{io.stop();}, this);
+    }
 
-  public Command indexUntilSwitch() {
-    return Commands.run(() -> io.setPercent(IndexerConstants.INDEX_PERCENT), this)
-        .until(io::isSwitchPressed)
-        .finallyDo(interrupted -> io.stop());
-  }
+    public Command indexUntilSwitch() {
+        return Commands.run(() -> io.setPercent(IndexerConstants.INDEX_PERCENT), this)
+                .until(io::isSwitchPressed)
+                .finallyDo(interrupted -> io.stop());
+    }
 
     public Command indexIntoShooter() {
         double targetPosition = inputs.position + IndexerConstants.SHOOTER_ROTATIONS;
         return Commands.run(() -> io.setPercent(IndexerConstants.INDEX_PERCENT), this)
                 .until(() -> inputs.position >= targetPosition)
                 .finallyDo(interrupted -> io.stop());
-    }
-
-
-    //added to reverse motors if ball is jammed
-    public Command reverse() {
-        return Commands.startEnd(
-                ()->io.setPercent(-0.4),
-                ()->io.setPercent(0),
-                this
-        );
     }
 
 }
