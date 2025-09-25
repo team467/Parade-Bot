@@ -34,6 +34,9 @@ public class RobotContainer {
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController = new CommandXboxController(0);
+    private boolean fastMode = false;
+    private final Trigger fastModeTrigger = new Trigger(() -> fastMode);
+
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -50,33 +53,70 @@ public class RobotContainer {
      * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
+
+    private Command spinupCommand() {
+        return Commands.either(
+                shooter.fullSpeed(),
+                shooter.speedUp(),
+                () -> fastMode
+        );
+    }
+
+    private Command rumbleWhileActive() {
+        return Commands.startEnd(
+                () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1.0),
+                () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0)
+        );
+    }
+
+
     private void configureBindings() {
+
+        driverController
+                .a()
+                .onTrue(
+                    Commands.runOnce(
+                            () -> fastMode = !fastMode));
+
+
+        fastModeTrigger
+                .whileTrue(
+                Commands.startEnd(
+                        () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1.0),
+                        () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0)
+                )
+        );
+
+
         driverController
                 .rightTrigger()
                 .whileTrue(
                         Commands.parallel(
-                                shooter.speedUp(),
+                                spinupCommand(),
                                 Commands.sequence(
-                                                Commands.either(
-                                                        indexer.indexUntilSwitch(),
-                                                        Commands.none(),
-                                                        () -> !indexer.hasBall()
-                                                ),
-                                                Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
-                                                indexer.indexIntoShooter()
-                                        )
-                                        .repeatedly()
+                                        Commands.either(
+                                                indexer.indexUntilSwitch(),
+                                                Commands.none(),
+                                                () -> !indexer.hasBall()
+                                        ),
+                                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
+                                        indexer.indexIntoShooter()
+                                )
+                                .repeatedly()
                         )
                 )
-                .onFalse(Commands.sequence(
-                            Commands.either(
-                                indexer.indexUntilSwitch(),
-                                Commands.none(),
-                                () -> !indexer.hasBall()
-                            ),
-                        Commands.parallel(shooter.stop(), indexer.stop()
+                .onFalse(
+                        Commands.sequence(
+                                Commands.either(
+                                        indexer.indexUntilSwitch(),
+                                        Commands.none(),
+                                            () -> !indexer.hasBall()),
+                                Commands.parallel(
+                                        shooter.stop(),
+                                        indexer.stop()
+                                )
                         )
-                        ));
+                );
 
 
         driverController.leftTrigger()
@@ -91,35 +131,36 @@ public class RobotContainer {
                         indexer.stop()
                 ));
 
-           
-
 
         driverController
                 .rightBumper()
                 .onTrue(
                         Commands.parallel(
-                                shooter.speedUp(),
+                                spinupCommand(),
                                 Commands.sequence(
-                                                Commands.either(
-                                                        indexer.indexUntilSwitch(),
-                                                        Commands.none(),
-                                                        () -> !indexer.hasBall()
-                                                ),
-                                                Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
-                                                indexer.indexIntoShooter()
-                                        )
-
+                                        Commands.either(
+                                                indexer.indexUntilSwitch(),
+                                                Commands.none(),
+                                                () -> !indexer.hasBall()
+                                        ),
+                                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
+                                        indexer.indexIntoShooter()
+                                )
                         )
                 )
-                .onFalse(Commands.sequence(
-                        Commands.either(
-                                indexer.indexUntilSwitch(),
-                                Commands.none(),
-                                () -> !indexer.hasBall()
-                        ),
-                        Commands.parallel(shooter.stop(), indexer.stop()
+                .onFalse(
+                        Commands.sequence(
+                                Commands.either(
+                                        indexer.indexUntilSwitch(),
+                                        Commands.none(),
+                                            () -> !indexer.hasBall()),
+                                Commands.parallel(
+                                        shooter.stop(),
+                                        indexer.stop()
+                                )
                         )
-                ));
+                );
+
 
 
     }
