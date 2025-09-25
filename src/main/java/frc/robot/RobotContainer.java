@@ -62,13 +62,6 @@ public class RobotContainer {
         );
     }
 
-    private Command rumbleWhileActive() {
-        return Commands.startEnd(
-                () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1.0),
-                () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0)
-        );
-    }
-
 
     private void configureBindings() {
         driverController
@@ -91,7 +84,6 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(
                         Commands.parallel(
-                                rumbleWhileActive(),
                                 spinupCommand(),
                                 Commands.sequence(
                                         Commands.either(
@@ -136,7 +128,6 @@ public class RobotContainer {
                 .rightBumper()
                 .onTrue(
                         Commands.parallel(
-                                rumbleWhileActive(),
                                 spinupCommand(),
                                 Commands.sequence(
                                         Commands.either(
