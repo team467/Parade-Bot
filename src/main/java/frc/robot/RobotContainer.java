@@ -71,7 +71,6 @@ public class RobotContainer {
 
 
     private void configureBindings() {
-
         driverController
                 .a()
                 .onTrue(
@@ -92,6 +91,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(
                         Commands.parallel(
+                                rumbleWhileActive(),
                                 spinupCommand(),
                                 Commands.sequence(
                                         Commands.either(
@@ -136,6 +136,7 @@ public class RobotContainer {
                 .rightBumper()
                 .onTrue(
                         Commands.parallel(
+                                rumbleWhileActive(),
                                 spinupCommand(),
                                 Commands.sequence(
                                         Commands.either(
