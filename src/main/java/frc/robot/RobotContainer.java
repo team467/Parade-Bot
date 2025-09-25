@@ -5,10 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -16,9 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 
 /**
@@ -31,6 +25,7 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
     private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
+    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -54,106 +49,32 @@ public class RobotContainer {
      * joysticks}.
      */
 
-    private Command spinupCommand() {
-        return Commands.either(
-                shooter.fullSpeed(),
-                shooter.speedUp(),
-                () -> fastMode
-        );
-    }
-
-
     private void configureBindings() {
-        driverController
-                .a()
-                .onTrue(
-                    Commands.runOnce(
-                            () -> fastMode = !fastMode));
+        driverController.a().onTrue(Commands.runOnce(() -> fastMode = !fastMode));
 
-
-        fastModeTrigger
-                .whileTrue(
-                Commands.startEnd(
-                        () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1.0),
-                        () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0)
+        fastModeTrigger.whileTrue(
+                edu.wpi.first.wpilibj2.command.Commands.startEnd(
+                        () -> driverController.getHID()
+                                .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 1.0),
+                        () -> driverController.getHID()
+                                .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0.0)
                 )
         );
-
 
         driverController
                 .rightTrigger()
-                .whileTrue(
-                        Commands.parallel(
-                                spinupCommand(),
-                                Commands.sequence(
-                                        Commands.either(
-                                                indexer.indexUntilSwitch(),
-                                                Commands.none(),
-                                                () -> !indexer.hasBall()
-                                        ),
-                                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
-                                        indexer.indexIntoShooter()
-                                )
-                                .repeatedly()
-                        )
-                )
-                .onFalse(
-                        Commands.sequence(
-                                Commands.either(
-                                        indexer.indexUntilSwitch(),
-                                        Commands.none(),
-                                            () -> !indexer.hasBall()),
-                                Commands.parallel(
-                                        shooter.stop(),
-                                        indexer.stop()
-                                )
-                        )
-                );
+                .whileTrue(orchestrator.shootCycle(() -> fastMode))
+                .onFalse(orchestrator.stopAll());
 
-
-        driverController.leftTrigger()
-                .whileTrue(
-                        Commands.parallel(
-                        shooter.reverse(),
-                        indexer.reverse()
-                ))
-                .onFalse(
-                        Commands.parallel(
-                        shooter.stop(),
-                        indexer.stop()
-                ));
-
+        driverController
+                .leftTrigger()
+                .whileTrue(orchestrator.reverseAll())
+                .onFalse(orchestrator.stopAll());
 
         driverController
                 .rightBumper()
-                .onTrue(
-                        Commands.parallel(
-                                spinupCommand(),
-                                Commands.sequence(
-                                        Commands.either(
-                                                indexer.indexUntilSwitch(),
-                                                Commands.none(),
-                                                () -> !indexer.hasBall()
-                                        ),
-                                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
-                                        indexer.indexIntoShooter()
-                                )
-                        )
-                )
-                .onFalse(
-                        Commands.sequence(
-                                Commands.either(
-                                        indexer.indexUntilSwitch(),
-                                        Commands.none(),
-                                            () -> !indexer.hasBall()),
-                                Commands.parallel(
-                                        shooter.stop(),
-                                        indexer.stop()
-                                )
-                        )
-                );
-
-
+                .onTrue(orchestrator.shootOnce(() -> fastMode))
+                .onFalse(orchestrator.stopAll());
 
     }
 
