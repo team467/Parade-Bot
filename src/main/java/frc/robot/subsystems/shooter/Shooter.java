@@ -46,5 +46,14 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public Command fullSpeed() {
+        return Commands.run(
+                () -> {
+                    io.setPercent(1);
+                },
+                this
+        );
+    }
+
 
 }
