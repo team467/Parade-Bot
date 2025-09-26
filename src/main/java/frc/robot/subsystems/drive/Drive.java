@@ -22,10 +22,10 @@ public class Drive extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
     }
-    public Command arcadeDrive(DoubleSupplier speedX, DoubleSupplier rotationZ) {
+    public Command curvatureDrive(DoubleSupplier speedX, DoubleSupplier rotationZ) {
         return Commands.run(
             () -> {
-                differentialDrive.arcadeDrive(speedX.getAsDouble(), rotationZ.getAsDouble());
+                differentialDrive.curvatureDrive(speedX.getAsDouble() * 12, rotationZ.getAsDouble() * 12, false);
             }, this);
     }
 }

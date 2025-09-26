@@ -43,7 +43,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drive.setDefaultCommand(drive.arcadeDrive(
+    drive.setDefaultCommand(drive.curvatureDrive(
             driverController::getLeftY,
             driverController::getRightX));
   }
