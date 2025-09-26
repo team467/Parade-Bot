@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import static frc.lib.utils.SparkUtil.tryUntilOk;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -52,10 +51,10 @@ public class DriveIOSparkMax implements DriveIO{
                 .voltageCompensation(12)
                 .smartCurrentLimit(60)
                 .follow(3, false);
-
-
-    tryUntilOk(leftLeader, 5, () -> leftLeader.configure(LeftLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
-
+        leftLeader.configure(LeftLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        leftFollower.configure(LeftFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        rightLeader.configure(RightLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        rightFollower.configure(RightFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
     }
 
     @Override
