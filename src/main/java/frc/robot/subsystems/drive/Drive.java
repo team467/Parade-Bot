@@ -11,12 +11,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
     private final DriveIO io;
-    private final DifferentialDrive differentialDrive;
     private DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
     public Drive(DriveIO io){
         this.io = io;
-        differentialDrive = new DifferentialDrive(io::setVoltageLeft, io::setVoltageRight);
-        differentialDrive.setSafetyEnabled(false);
     }
     @Override
     public void periodic() {
@@ -26,7 +23,11 @@ public class Drive extends SubsystemBase {
     public Command arcadeDrive(DoubleSupplier speedX, DoubleSupplier rotation) {
         return Commands.run(
             () -> {
-                differentialDrive.arcadeDrive(speedX.getAsDouble() * 12, rotation.getAsDouble());
+                var speeds = DifferentialDrive.arcadeDriveIK(speedX.getAsDouble(), rotation.getAsDouble(), true);
+                Logger.recordOutput("Drive/LeftSpeeds", speeds.left);
+                Logger.recordOutput("Drive/RightSpeeds", speeds.right);
+                io.setVoltageLeft(speeds.left * 12);
+                io.setVoltageRight(speeds.right * 12);
             }, this);
     }
 }
