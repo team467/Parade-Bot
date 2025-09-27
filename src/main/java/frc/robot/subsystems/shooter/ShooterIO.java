@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import org.ejml.dense.row.factory.DecompositionFactory_CDRM;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
@@ -22,7 +23,7 @@ public interface ShooterIO {
 
     default void setPercent(double percent) {}
 
-
+    default void setVoltage(double voltage) {}
 
     default void stop() {}
 }

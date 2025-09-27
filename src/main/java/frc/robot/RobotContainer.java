@@ -62,7 +62,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(orchestrator.shootCycle(() -> fastMode))
                 .onFalse(orchestrator.stopAll());
-
+        driverController.y().whileTrue(shooter.speedUp()).onFalse(shooter.stop());
         driverController
                 .leftTrigger()
                 .whileTrue(orchestrator.reverseAll())
