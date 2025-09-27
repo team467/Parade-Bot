@@ -22,7 +22,7 @@ public class IndexerIOSparkMax implements IndexerIO {
         motor = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushed);
 
         var config = new SparkMaxConfig();
-        config.inverted(false)                       
+        config.inverted(true)
                 .idleMode(IdleMode.kBrake)
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
