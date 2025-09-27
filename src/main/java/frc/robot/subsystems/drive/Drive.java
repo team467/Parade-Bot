@@ -16,16 +16,17 @@ public class Drive extends SubsystemBase {
     public Drive(DriveIO io){
         this.io = io;
         differentialDrive = new DifferentialDrive(io::setVoltageLeft, io::setVoltageRight);
+        differentialDrive.setSafetyEnabled(false);
     }
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
     }
-    public Command curvatureDrive(DoubleSupplier speedX, DoubleSupplier rotationZ) {
+    public Command arcadeDrive(DoubleSupplier speedX, DoubleSupplier rotation) {
         return Commands.run(
             () -> {
-                differentialDrive.curvatureDrive(speedX.getAsDouble() * 12, rotationZ.getAsDouble() * 12, false);
+                differentialDrive.arcadeDrive(speedX.getAsDouble() * 12, rotation.getAsDouble());
             }, this);
     }
 }

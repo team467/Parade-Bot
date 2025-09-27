@@ -39,18 +39,18 @@ public class DriveIOSparkMax implements DriveIO{
                 .smartCurrentLimit(60);
 
         var LeftFollowerConfig = new SparkMaxConfig();
-        LeftFollowerConfig
-                .idleMode(SparkBaseConfig.IdleMode.kBrake)
-                .voltageCompensation(12)
-                .smartCurrentLimit(60)
-                .follow(1, false);
-
-        var RightFollowerConfig = new SparkMaxConfig();
-        RightFollowerConfig
+        LeftFollowerConfig.inverted(false)
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
                 .voltageCompensation(12)
                 .smartCurrentLimit(60)
                 .follow(3, false);
+
+        var RightFollowerConfig = new SparkMaxConfig();
+        RightFollowerConfig.inverted(false)
+                .idleMode(SparkBaseConfig.IdleMode.kBrake)
+                .voltageCompensation(12)
+                .smartCurrentLimit(60)
+                .follow(5, false);
         leftLeader.configure(LeftLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         leftFollower.configure(LeftFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         rightLeader.configure(RightLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
