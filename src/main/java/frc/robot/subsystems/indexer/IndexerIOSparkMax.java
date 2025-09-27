@@ -11,12 +11,13 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.AnalogTrigger;
 
 public class IndexerIOSparkMax implements IndexerIO {
 
     private final SparkMax motor;
     private final RelativeEncoder encoder;
-    private final SparkLimitSwitch limitSwitch;
+    private final AnalogTrigger limitSwitch;
 
     public IndexerIOSparkMax() {
         motor = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushed);
@@ -36,7 +37,8 @@ public class IndexerIOSparkMax implements IndexerIO {
 
         encoder = motor.getEncoder();
 
-        limitSwitch = motor.getForwardLimitSwitch();
+        limitSwitch = new AnalogTrigger(0);
+        limitSwitch.setLimitsVoltage(1.5, 4);
     }
 
     @Override
@@ -46,7 +48,7 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.amps = motor.getOutputCurrent();
         inputs.position = encoder.getPosition();
         inputs.velocity = encoder.getVelocity();
-        inputs.ballAtSwitch = limitSwitch.isPressed();
+        inputs.ballAtSwitch = limitSwitch.getTriggerState();
     }
 
     @Override
@@ -63,7 +65,7 @@ public class IndexerIOSparkMax implements IndexerIO {
     }
 
     public boolean isSwitchPressed() {
-        return limitSwitch.isPressed();
+        return limitSwitch.getTriggerState();
     }
 }
 
