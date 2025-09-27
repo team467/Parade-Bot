@@ -5,13 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.OperatorConstants;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.drive.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.IndexerIOSparkMax;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIOSparkMax;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,9 +27,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive drive;
+    // The robot's subsystems and commands are defined here...
+    private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
+    private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
+    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
+    private final CommandXboxController driverController = new CommandXboxController(0);
+    private boolean fastMode = false;
+    private final Trigger fastModeTrigger = new Trigger(() -> fastMode);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController = new CommandXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,12 +52,45 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    drive.setDefaultCommand(drive.arcadeDrive(
-            driverController::getLeftY,
-            driverController::getRightY));
-  }
-  public Command getAutonomousCommand() {
-    return Commands.none();
-  }
+    private void configureBindings() {
+        driverController.a().onTrue(Commands.runOnce(() -> fastMode = !fastMode));
+
+        fastModeTrigger.whileTrue(
+                edu.wpi.first.wpilibj2.command.Commands.startEnd(
+                        () -> driverController.getHID()
+                                .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 1.0),
+                        () -> driverController.getHID()
+                                .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0.0)
+                ));
+                drive.setDefaultCommand(drive.arcadeDrive(
+                        driverController::getLeftY,
+                        driverController::getRightY));
+
+        driverController
+                .rightTrigger()
+                .whileTrue(orchestrator.shootCycle(() -> fastMode))
+                .onFalse(orchestrator.stopAll());
+        driverController.y().whileTrue(shooter.speedUp()).onFalse(shooter.stop());
+        driverController
+                .leftTrigger()
+                .whileTrue(orchestrator.reverseAll())
+                .onFalse(orchestrator.stopAll());
+
+        driverController
+                .rightBumper()
+                .onTrue(orchestrator.shootOnce(() -> fastMode))
+                .onFalse(orchestrator.stopAll());
+
+    }
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+
+    public Command getAutonomousCommand() {
+        // An example command will be run in autonomous
+        return Commands.none();
+    }
 }
