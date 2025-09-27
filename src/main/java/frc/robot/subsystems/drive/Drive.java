@@ -26,8 +26,8 @@ public class Drive extends SubsystemBase {
                 var speeds = DifferentialDrive.arcadeDriveIK(speedX.getAsDouble(), rotation.getAsDouble(), true);
                 Logger.recordOutput("Drive/LeftSpeeds", speeds.left);
                 Logger.recordOutput("Drive/RightSpeeds", speeds.right);
-                io.setVoltageLeft(speeds.left * 12);
-                io.setVoltageRight(speeds.right * 12);
+                io.setVoltageLeft(speeds.left * 7);
+                io.setVoltageRight(speeds.right * 7);
             }, this);
     }
 }
