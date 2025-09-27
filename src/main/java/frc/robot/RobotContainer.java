@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.drive.*;
@@ -43,11 +42,6 @@ public class RobotContainer {
     drive = new Drive(new DriveIOSparkMax());
     configureBindings();
   }
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    public RobotContainer() {
-        // Configure the trigger bindings
-        configureBindings();
-    }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -58,24 +52,6 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    drive.setDefaultCommand(drive.arcadeDrive(
-            driverController::getLeftY,
-            driverController::getRightY));
-  }
-  public Command getAutonomousCommand() {
-    return Commands.none();
-  }
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
-
     private void configureBindings() {
         driverController.a().onTrue(Commands.runOnce(() -> fastMode = !fastMode));
 
@@ -85,8 +61,10 @@ public class RobotContainer {
                                 .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 1.0),
                         () -> driverController.getHID()
                                 .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0.0)
-                )
-        );
+                ));
+                drive.setDefaultCommand(drive.arcadeDrive(
+                        driverController::getLeftY,
+                        driverController::getRightY));
 
         driverController
                 .rightTrigger()
