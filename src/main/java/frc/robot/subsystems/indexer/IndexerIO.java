@@ -8,8 +8,6 @@ public interface IndexerIO {
         public double percentOutput = 0.0;
         public double volts = 0.0;
         public double amps = 0.0;
-        public double position = 0.0; 
-        public double velocity = 0.0; 
         public boolean ballAtSwitch = false; 
     }
 

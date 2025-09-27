@@ -12,12 +12,12 @@ import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.AnalogTrigger;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class IndexerIOSparkMax implements IndexerIO {
 
     private final SparkMax motor;
-    private final RelativeEncoder encoder;
-    private final AnalogTrigger limitSwitch;
+    private final DigitalInput limitSwitch;
 
     public IndexerIOSparkMax() {
         motor = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushed);
@@ -28,17 +28,9 @@ public class IndexerIOSparkMax implements IndexerIO {
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
 
-        EncoderConfig enc = new EncoderConfig();
-        enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
-        enc.velocityConversionFactor(ENCODER_VELOCITY_CONVERSION);
-        config.apply(enc);
-
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        encoder = motor.getEncoder();
-
-        limitSwitch = new AnalogTrigger(0);
-        limitSwitch.setLimitsVoltage(1.5, 4);
+        limitSwitch = new DigitalInput(0);
     }
 
     @Override
@@ -46,9 +38,8 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.percentOutput = motor.get();
         inputs.volts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.amps = motor.getOutputCurrent();
-        inputs.position = encoder.getPosition();
-        inputs.velocity = encoder.getVelocity();
-        inputs.ballAtSwitch = limitSwitch.getTriggerState();
+        inputs.ballAtSwitch = isSwitchPressed()
+        ;
     }
 
     @Override
@@ -65,7 +56,7 @@ public class IndexerIOSparkMax implements IndexerIO {
     }
 
     public boolean isSwitchPressed() {
-        return limitSwitch.getTriggerState();
+        return limitSwitch.get();
     }
 }
 

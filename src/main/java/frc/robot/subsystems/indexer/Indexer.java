@@ -33,9 +33,8 @@ public class Indexer extends SubsystemBase {
     }
 
     public Command indexIntoShooter() {
-        double targetPosition = inputs.position + IndexerConstants.SHOOTER_ROTATIONS;
         return Commands.run(() -> io.setPercent(IndexerConstants.INDEX_PERCENT), this)
-                .until(() -> inputs.position >= targetPosition)
+                .until(() -> !inputs.ballAtSwitch)
                 .finallyDo(interrupted -> io.stop());
     }
 
