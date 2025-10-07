@@ -22,7 +22,7 @@ public class Orchestrator {
         return Commands.either(
                 shooter.fullSpeed(),
                 shooter.speedUp(),
-                 fastMode);
+                fastMode);
     }
 
     public Command intakeIfNeeded() {

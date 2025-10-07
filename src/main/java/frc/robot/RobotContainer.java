@@ -16,9 +16,6 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
 
 /**
@@ -28,30 +25,61 @@ import frc.robot.subsystems.vision.VisionIOPhotonVision;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final Drive drive;
     // The robot's subsystems and commands are defined here...
-    private final Vision vision;
+    private final Drive drive;
+    // The robot's subsystems and commands are defined here...
+    private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
+    private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
+    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
+    private final CommandXboxController driverController = new CommandXboxController(0);
+    private boolean fastMode = false;
+    private final Trigger fastModeTrigger = new Trigger(() -> fastMode);
 
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    drive = new Drive(new DriveIOSparkMax());
-    vision =  new Vision(new VisionIOPhotonVision("VGA_USB_Camera"){});
-    configureBindings();
-  }
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+        // Configure the trigger bindings
+        drive = new Drive(new DriveIOSparkMax());
+        configureBindings();
+    }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
     private void configureBindings() {
+        driverController.a().onTrue(Commands.runOnce(() -> fastMode = !fastMode));
+
+        fastModeTrigger.whileTrue(
+                edu.wpi.first.wpilibj2.command.Commands.startEnd(
+                        () -> driverController.getHID()
+                                .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 1.0),
+                        () -> driverController.getHID()
+                                .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0.0)
+                ));
+        drive.setDefaultCommand(drive.arcadeDrive(
+                driverController::getLeftY,
+                driverController::getRightY));
+
+        driverController
+                .rightTrigger()
+                .whileTrue(orchestrator.shootCycle(() -> fastMode))
+                .onFalse(orchestrator.stopAll());
+        driverController.y().whileTrue(shooter.speedUp()).onFalse(shooter.stop());
+        driverController
+                .leftTrigger()
+                .whileTrue(orchestrator.reverseAll())
+                .onFalse(orchestrator.stopAll());
+
+        driverController
+                .rightBumper()
+                .onTrue(orchestrator.shootOnce(() -> fastMode))
+                .onFalse(orchestrator.stopAll());
 
     }
 
