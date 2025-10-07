@@ -32,6 +32,12 @@ public class RobotContainer {
   private final Drive drive;
     // The robot's subsystems and commands are defined here...
     private final Vision vision;
+   private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
+    private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
+    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
+    private final CommandXboxController driverController = new CommandXboxController(0);
+    private boolean fastMode = false;
+    private final Trigger fastModeTrigger = new Trigger(() -> fastMode);
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -52,7 +58,33 @@ public class RobotContainer {
    * joysticks}.
    */
     private void configureBindings() {
-
+       driverController.a().onTrue(Commands.runOnce(() -> fastMode = !fastMode));
+      
+              fastModeTrigger.whileTrue(
+                      edu.wpi.first.wpilibj2.command.Commands.startEnd(
+                              () -> driverController.getHID()
+                                      .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 1.0),
+                              () -> driverController.getHID()
+                                      .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0.0)
+                      ));
+                      drive.setDefaultCommand(drive.arcadeDrive(
+                              driverController::getLeftY,
+                              driverController::getRightY));
+      
+              driverController
+                      .rightTrigger()
+                      .whileTrue(orchestrator.shootCycle(() -> fastMode))
+                      .onFalse(orchestrator.stopAll());
+              driverController.y().whileTrue(shooter.speedUp()).onFalse(shooter.stop());
+              driverController
+                      .leftTrigger()
+                      .whileTrue(orchestrator.reverseAll())
+                      .onFalse(orchestrator.stopAll());
+      
+              driverController
+                      .rightBumper()
+                      .onTrue(orchestrator.shootOnce(() -> fastMode))
+                      .onFalse(orchestrator.stopAll());
     }
 
     /**
