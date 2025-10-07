@@ -1,28 +1,19 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
-    private final VisionConsumer consumer;
-    private final VisionIO[] io;
-    private final VisionIOInputsAutoLogged[] inputs;
-    private final Alert[] disconnectedAlerts;
+    private final VisionIO io;
+    public final VisionIOInputsAutoLogged inputs;
 
-    public Vision(VisionConsumer consumer, VisionIO... io) {
-        this.consumer = consumer;
+    public Vision(VisionIO io) {
         this.io = io;
-
-        this.inputs = new VisionIOInputsAutoLogged[io.length];
-        for (int i = 0; i < inputs.length; i++) {
-            inputs[i] = new VisionIOInputsAutoLogged();
-        }
-
-        this.disconnectedAlerts = new Alert[io.length];
-        for (int i = 0; i < inputs.length; i++) {
-            disconnectedAlerts[i] =
-                    new Alert(
-                            "Vision camera " + Integer.toString(i) + " is disconnected.", Alert.AlertType.kWarning);
-        }
+        this.inputs = new VisionIOInputsAutoLogged();
+    }
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("Vision/Camera", inputs);
     }
 }
