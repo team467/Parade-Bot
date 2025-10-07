@@ -31,5 +31,5 @@ public interface VisionIO {
     PHOTONVISION
   }
 
-   public default void updateInputs(VisionIOInputs inputs) {}
+   default void updateInputs(VisionIOInputs inputs) {}
 }
