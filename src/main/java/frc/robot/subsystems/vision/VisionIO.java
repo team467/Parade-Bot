@@ -11,9 +11,9 @@ public interface VisionIO {
     public boolean connected = false;
     public PoseObservation latestTargetObservation =
         new PoseObservation(0, new Translation3d(), 0);
-    public int lastestTagID = latestTargetObservation.tagID;
-    public double distanceFromTarget = latestTargetObservation.translation3d.getNorm();
-    public double yaw = latestTargetObservation.yaw;
+    public int lastestTagID = 0 ;
+    public double distanceFromTarget = 0;
+    public double yaw = 0;
   }
 
 
@@ -31,5 +31,5 @@ public interface VisionIO {
     PHOTONVISION
   }
 
-   default void updateInputs(VisionIOInputs inputs) {}
+   public default void updateInputs(VisionIOInputs inputs) {}
 }

@@ -9,11 +9,9 @@ import java.util.Set;
 import org.photonvision.PhotonCamera;
 public class VisionIOPhotonVision implements VisionIO{
     protected final PhotonCamera camera;
-    protected final Transform3d robotToCamera;
 
-    public VisionIOPhotonVision(String name, Transform3d robotToCamera){
+    public VisionIOPhotonVision(String name){
         camera = new PhotonCamera(name);
-        this.robotToCamera = robotToCamera;
     }
 
 
@@ -26,6 +24,9 @@ public class VisionIOPhotonVision implements VisionIO{
         }else{
             inputs.latestTargetObservation = new PoseObservation(0,new Translation3d(),0);
             }
+        inputs.lastestTagID = inputs.latestTargetObservation.tagID();
+        inputs.distanceFromTarget = inputs.latestTargetObservation.translation3d().getNorm();
+        inputs.yaw = inputs.latestTargetObservation.yaw();
 
 
 
