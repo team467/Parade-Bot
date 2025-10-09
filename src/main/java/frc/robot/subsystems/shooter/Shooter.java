@@ -36,7 +36,15 @@ public class Shooter extends SubsystemBase {
          );
 }
 
-
+    public Command speedUp_Distance(Double distance) {
+        return Commands.run(
+                () -> {
+                    double percent = (8.331 * Math.pow(10,-5)*Math.pow(distance,2) - 0.0734*distance + 15.709)/100;
+                    io.setPercent(percent);
+                },
+                this
+        );
+    }
     public Command speedUp_60Percent() {
         return Commands.run(
                 () -> {
