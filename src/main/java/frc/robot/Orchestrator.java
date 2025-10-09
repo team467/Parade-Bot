@@ -21,7 +21,7 @@ public class Orchestrator {
     public Command spinUp(BooleanSupplier fastMode) {
         return Commands.either(
                 shooter.fullSpeed(),
-                shooter.speedUp(),
+                shooter.speedUp_80Percent(),
                  fastMode);
     }
 

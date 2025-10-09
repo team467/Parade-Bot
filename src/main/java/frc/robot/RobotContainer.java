@@ -17,7 +17,6 @@ import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
 
@@ -31,7 +30,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive drive;
     // The robot's subsystems and commands are defined here...
-    private final Vision vision;
    private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
     private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
     private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
@@ -44,7 +42,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drive = new Drive(new DriveIOSparkMax());
-    vision =  new Vision(new VisionIOPhotonVision("VGA_USB_Camera"){});
     configureBindings();
   }
 
@@ -75,16 +72,30 @@ public class RobotContainer {
                       .rightTrigger()
                       .whileTrue(orchestrator.shootCycle(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
-              driverController.y().whileTrue(shooter.speedUp()).onFalse(shooter.stop());
-              driverController
-                      .leftTrigger()
-                      .whileTrue(orchestrator.reverseAll())
-                      .onFalse(orchestrator.stopAll());
-      
+
               driverController
                       .rightBumper()
                       .onTrue(orchestrator.shootOnce(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
+
+              driverController.x().whileTrue(shooter.speedUp_20Percent()).onFalse(shooter.stop());
+
+              driverController.b().whileTrue(shooter.speedUp_40Percent()).onFalse(shooter.stop());
+
+              driverController.start().whileTrue(shooter.speedUp_60Percent()).onFalse(shooter.stop());
+
+              driverController.leftTrigger().onTrue(indexer.indexUntilSwitch());
+
+              driverController.y().onTrue(indexer.indexIntoShooter());
+
+
+              driverController
+                      .leftBumper()
+                      .whileTrue(orchestrator.reverseAll())
+                      .onFalse(orchestrator.stopAll());
+      
+
+
     }
 
     /**

@@ -37,10 +37,37 @@ public class Shooter extends SubsystemBase {
 }
 
 
-    public Command speedUp() {
+    public Command speedUp_60Percent() {
         return Commands.run(
                 () -> {
-                    io.setPercent(ShooterConstants.SPEED);
+                    io.setPercent(0.6);
+                },
+                this
+        );
+    }
+
+    public Command speedUp_80Percent() {
+        return Commands.run(
+                () -> {
+                    io.setPercent(0.8);
+                },
+                this
+        );
+    }
+
+    public Command speedUp_40Percent() {
+        return Commands.run(
+                () -> {
+                    io.setPercent(0.4);
+                },
+                this
+        );
+    }
+
+    public Command speedUp_20Percent() {
+        return Commands.run(
+                () -> {
+                    io.setPercent(0.2);
                 },
                 this
         );
