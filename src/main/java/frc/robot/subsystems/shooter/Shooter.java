@@ -36,51 +36,6 @@ public class Shooter extends SubsystemBase {
          );
 }
 
-    public Command speedUp_Distance(Double distance) {
-        return Commands.run(
-                () -> {
-                    double percent = (8.331 * Math.pow(10,-5)*Math.pow(distance,2) - 0.0734*distance + 15.709)/100;
-                    io.setPercent(percent);
-                },
-                this
-        );
-    }
-    public Command speedUp_60Percent() {
-        return Commands.run(
-                () -> {
-                    io.setPercent(0.6);
-                },
-                this
-        );
-    }
-
-    public Command speedUp_80Percent() {
-        return Commands.run(
-                () -> {
-                    io.setPercent(0.8);
-                },
-                this
-        );
-    }
-
-    public Command speedUp_40Percent() {
-        return Commands.run(
-                () -> {
-                    io.setPercent(0.4);
-                },
-                this
-        );
-    }
-
-    public Command speedUp_20Percent() {
-        return Commands.run(
-                () -> {
-                    io.setPercent(0.2);
-                },
-                this
-        );
-    }
-
     public Command fullSpeed() {
         return Commands.run(
                 () -> {
@@ -89,6 +44,12 @@ public class Shooter extends SubsystemBase {
                 this
         );
     }
+        public Command runPercent(double percent){
+            return Commands.run(() -> {
+                io.setPercent(percent);
+            },
+                    this);
+            }
 
 
 }
