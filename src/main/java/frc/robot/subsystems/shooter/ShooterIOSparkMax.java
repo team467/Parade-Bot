@@ -3,9 +3,10 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.subsystems.shooter.ShooterConstants.*;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.EncoderConfig;
@@ -17,8 +18,13 @@ public class ShooterIOSparkMax implements ShooterIO {
     private final SparkMax motor;
     private final RelativeEncoder encoder;
 
+    private SparkClosedLoopController controller;
+    double setpoint = 0.0;
+
     public ShooterIOSparkMax() {
         motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
+
+        controller = motor.getClosedLoopController();
 
         var config = new SparkMaxConfig();
         config.inverted(false)
@@ -45,6 +51,11 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.velocity = encoder.getVelocity();
     }
 
+    @Override
+    public void setPosition(double setpoint) {
+        this.setpoint = setpoint;
+    }
+
     public void setPercent(double percent) {
         motor.set(percent);
     }
@@ -55,5 +66,10 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     public void stop() {
         motor.set(0);
+    }
+
+    @Override
+    public void goToSetpoint() {
+        controller.setReference(this.setpoint, SparkBase.ControlType.kPosition);
     }
 }

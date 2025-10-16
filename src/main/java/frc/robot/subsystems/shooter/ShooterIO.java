@@ -19,6 +19,8 @@ public interface ShooterIO {
         public boolean readyToShoot = false;
     }
 
+    default void setPosition(double setpoint) {}
+
     default void updateInputs(ShooterIOInputs inputs) {}
 
     default void setPercent(double percent) {}
@@ -26,4 +28,7 @@ public interface ShooterIO {
     default void setVoltage(double voltage) {}
 
     default void stop() {}
+
+    default void goToSetpoint() {}
+
 }
