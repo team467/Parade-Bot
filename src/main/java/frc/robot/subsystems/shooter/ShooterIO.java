@@ -16,6 +16,8 @@ public interface ShooterIO {
 
         public double temperature;
 
+        public double angularVelocity;
+
         public boolean readyToShoot = false;
 
         public boolean atSetpoint = false;
