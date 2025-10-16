@@ -18,7 +18,7 @@ public class ShooterIOSparkMax implements ShooterIO {
     private final SparkMax motor;
     private final RelativeEncoder encoder;
 
-    private SparkClosedLoopController controller;
+    private final SparkClosedLoopController controller;
     double setpoint = 0.0;
 
     public ShooterIOSparkMax() {
@@ -49,10 +49,11 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
         inputs.velocity = encoder.getVelocity();
+        inputs.atSetpoint = Math.abs(setpoint - inputs.velocity) < TOLERANCE;
     }
 
     @Override
-    public void setPosition(double setpoint) {
+    public void setSpeed(double setpoint) {
         this.setpoint = setpoint;
     }
 

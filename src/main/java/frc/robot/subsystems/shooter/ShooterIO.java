@@ -17,9 +17,11 @@ public interface ShooterIO {
         public double temperature;
 
         public boolean readyToShoot = false;
+
+        public boolean atSetpoint = false;
     }
 
-    default void setPosition(double setpoint) {}
+    default void setSpeed(double setpoint) {}
 
     default void updateInputs(ShooterIOInputs inputs) {}
 
