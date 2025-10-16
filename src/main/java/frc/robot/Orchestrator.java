@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -69,6 +70,21 @@ public class Orchestrator {
                                 Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
                                 indexer.indexIntoShooter())
                         .repeatedly());
+    }
+
+    public Command shootOnceSetpoint(DoubleSupplier setpoint) {
+        return Commands.parallel(
+                shooter.toSetpoint(setpoint)
+                        .withTimeout(0.001)
+                        .andThen(shooter.toSetpoint(setpoint).until(shooter::atSetpoint)),
+                Commands.sequence(
+                        intakeIfNeeded(),
+                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
+                        indexer.indexIntoShooter()));
+    }
+
+    public Command shootCycleSetpoint(DoubleSupplier setpoint) {
+        return shootOnceSetpoint(setpoint).repeatedly();
     }
 
     public Command reverseAll() {

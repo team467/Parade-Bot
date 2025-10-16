@@ -78,6 +78,16 @@ public class RobotContainer {
                       .onTrue(orchestrator.shootOnce(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
 
+              driverController
+                      .b()
+                      .whileTrue(orchestrator.shootCycleSetpoint(() -> 0.5))
+                      .onFalse(orchestrator.stopAll());
+
+              driverController
+                      .b()
+                      .onTrue(orchestrator.shootOnceSetpoint(() -> 0.5))
+                      .onFalse(orchestrator.stopAll());
+
               driverController.x().whileTrue(orchestrator.shootCycleDistance()).onFalse(shooter.stop());
 
               driverController.leftTrigger().onTrue(indexer.indexUntilSwitch());
