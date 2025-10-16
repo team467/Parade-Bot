@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -31,6 +32,11 @@ public class ShooterIOSparkMax implements ShooterIO {
                 .idleMode(IdleMode.kBrake)
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
+        config
+                .closedLoop
+                .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAlternateOrExternalEncoder)
+                .positionWrappingEnabled(false)
+                .pidf(15, 0.0, 7, 0.0); // TODO: Fix arbitrary values
 
         EncoderConfig enc = new EncoderConfig();
         enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
