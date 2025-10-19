@@ -71,6 +71,26 @@ public class Orchestrator {
                         .repeatedly());
     }
 
+    public Command shootOncePID(double setpointRPM) {
+        return Commands.parallel(
+                shooter.toSetpoint(setpointRPM),
+                Commands.sequence(
+                        intakeIfNeeded(),
+                        Commands.waitUntil(shooter::atSetpoint),
+                        indexer.indexIntoShooter()));
+    }
+
+    public Command shootCyclePID(double setpointRPM) {
+        return Commands.parallel(
+                shooter.toSetpoint(setpointRPM),
+                Commands.sequence(
+                                intakeIfNeeded(),
+                                Commands.waitUntil(shooter::atSetpoint),
+                                indexer.indexIntoShooter())
+                        .repeatedly());
+    }
+
+
     public Command reverseAll() {
         return Commands.parallel(shooter.reverse(), indexer.reverse());
     }
