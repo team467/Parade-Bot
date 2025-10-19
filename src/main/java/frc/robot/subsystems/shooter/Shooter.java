@@ -21,12 +21,12 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
+        io.goToSetpoint();
     }
 
     public Command stop() {
         return Commands.runOnce(() ->{io.stop();}, this);
     }
-
 
     public Command reverse() {
         return Commands.startEnd(
@@ -35,6 +35,27 @@ public class Shooter extends SubsystemBase {
             this
          );
 }
+
+    public boolean atSetpoint() {
+        return inputs.atSetpoint;
+    }
+
+    public Command toSetpoint(double setpointRPM) {
+        return Commands.run(
+                () -> {
+                    io.setVelocity(setpointRPM);
+                },
+                this
+        );
+    }
+
+    public Command toSetpoint(DoubleSupplier setpointRPM) {
+        return Commands.run(
+                () -> {
+                    io.setVelocity(setpointRPM.getAsDouble());
+                },
+                this);
+    }
 
     public Command fullSpeed() {
         return Commands.run(
