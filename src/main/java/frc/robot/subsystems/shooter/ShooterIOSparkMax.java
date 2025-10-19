@@ -26,6 +26,12 @@ public class ShooterIOSparkMax implements ShooterIO {
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
 
+        config
+                .closedLoop
+                .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAlternateOrExternalEncoder)
+                .positionWrappingEnabled(false)
+                .pidf(0,0,0,0); // TODO: tune PIDF values
+
         EncoderConfig enc = new EncoderConfig();
         enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
         enc.velocityConversionFactor(ENCODER_VELOCITY_CONVERSION);
