@@ -9,8 +9,6 @@ public interface ShooterIO {
 
         public double velocity; // RPM
 
-        public double angularVelocity; // Rad/s
-
         public double appliedVolts;
 
         public double currentAmps;
