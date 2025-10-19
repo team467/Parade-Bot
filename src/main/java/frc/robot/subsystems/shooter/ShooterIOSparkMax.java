@@ -61,6 +61,16 @@ public class ShooterIOSparkMax implements ShooterIO {
         motor.setVoltage(volts);
     }
 
+    @Override
+    public void setVelocity(double setpointRPM) {
+        this.setpointRPM = setpointRPM;
+    }
+
+    @Override
+    public void goToSetpoint() {
+        controller.setReference(this.setpointRPM, SparkBase.ControlType.kVelocity);
+    }
+
     public void stop() {
         motor.set(0);
     }
