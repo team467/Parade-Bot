@@ -56,7 +56,8 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.temperature = motor.getMotorTemperature();
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
-        inputs.velocity = encoder.getVelocity();
+        inputs.velocity = encoder.getVelocity(); // RPM
+        inputs.angularVelocity = encoder.getVelocity() * (2 * Math.PI / 60); // Rad/s
         inputs.setpointRPM = setpointRPM;
         inputs.atSetpoint = Math.abs(setpointRPM - inputs.velocity) < TOLERANCE; // TODO: change tolerance
     }
