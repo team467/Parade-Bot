@@ -7,7 +7,9 @@ public interface ShooterIO {
     @AutoLog
     class ShooterIOInputs {
 
-        public double velocity;
+        public double velocity; // RPM
+
+        public double angularVelocity; // Rad/s
 
         public double appliedVolts;
 
