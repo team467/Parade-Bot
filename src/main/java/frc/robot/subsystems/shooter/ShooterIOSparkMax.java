@@ -17,6 +17,9 @@ public class ShooterIOSparkMax implements ShooterIO {
     private final SparkMax motor;
     private final RelativeEncoder encoder;
 
+    private double setpoint;
+    private boolean isCalibrated = false;
+
     public ShooterIOSparkMax() {
         motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
 
@@ -25,6 +28,11 @@ public class ShooterIOSparkMax implements ShooterIO {
                 .idleMode(IdleMode.kBrake)
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
+
+        config.closedLoop
+                .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
+                .positionWrappingEnabled(false)
+                .pid(0.0, 0.0, 0.0); 
 
         EncoderConfig enc = new EncoderConfig();
         enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
@@ -56,4 +64,12 @@ public class ShooterIOSparkMax implements ShooterIO {
     public void stop() {
         motor.set(0);
     }
+  @Override
+  public void goToSetpoint() {
+    if (!isCalibrated) {
+      setPercent(-0.15);
+    } else {
+      controller.setReference(this.setpoint, SparkBase.ControlType.kPosition);
+    }
+  }
 }

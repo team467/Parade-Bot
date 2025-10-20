@@ -23,6 +23,8 @@ public interface ShooterIO {
         public boolean readyToShoot = false;
 
         public boolean atSetpoint = false;
+
+        public boolean isCalibrated = false;
     }
 
     default void updateInputs(ShooterIOInputs inputs) {}
