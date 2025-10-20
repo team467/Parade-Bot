@@ -78,6 +78,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     @Override
     public void goToSetpoint() {
-        controller.setReference(this.setpoint, SparkBase.ControlType.kPosition);
+        controller.setReference(this.setpoint, SparkBase.ControlType.kVelocity);
     }
 }
