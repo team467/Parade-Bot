@@ -32,7 +32,7 @@ public class ShooterIOSparkMax implements ShooterIO {
         config.closedLoop
                 .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
                 .positionWrappingEnabled(false)
-                .pid(0.0, 0.0, 0.0); 
+                .pid(KP, 0.0, KD); 
 
         EncoderConfig enc = new EncoderConfig();
         enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
@@ -66,11 +66,11 @@ public class ShooterIOSparkMax implements ShooterIO {
         motor.set(0);
     }
   @Override
-  public void goToSetpoint() {
+  public void gotoSetspeed() {
     if (!isCalibrated) {
       setPercent(-0.15);
     } else {
-      controller.setReference(this.setpoint, SparkBase.ControlType.kPosition);
+      controller.setReference(this.setspeed, SparkBase.ControlType.kVelocity);
     }
   }
 }

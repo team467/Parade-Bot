@@ -23,11 +23,11 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
-    public boolean atSetpoint(){
+    public boolean atSetspeed(){
         return inputs.atSetpoint;
     }
 
-    public Command toSetPoint(double setpointVelocity){
+    public Command toSetspeed(double setpointVelocity){
         return Commands.run(
             () -> {
                 this.isManual = false;

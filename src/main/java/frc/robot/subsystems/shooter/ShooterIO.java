@@ -10,7 +10,7 @@ public interface ShooterIO {
 
         public double velocity;
 
-        public double setPoint = 0.0;
+        public double setspeed = 0.0;
 
         public double appliedVolts;
 
@@ -22,7 +22,7 @@ public interface ShooterIO {
 
         public boolean readyToShoot = false;
 
-        public boolean atSetpoint = false;
+        public boolean atSetspeed = false;
 
         public boolean isCalibrated = false;
     }
@@ -33,7 +33,7 @@ public interface ShooterIO {
 
     default void setVoltage(double voltage) {}
 
-    default void gotoSetpoint() {}
+    default void gotoSetspeed() {}
 
     default void stop() {}
 }

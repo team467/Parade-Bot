@@ -18,6 +18,17 @@ public class Orchestrator {
         this.shooter = shooter;
     }
     
+    public Command setShooterVelocity(double setpoint){
+        return shooter 
+            .toSetspeed(setspeed)
+            .andThen(shooter.toSetspeed(setspeed).until(shooter::atSetspeed));
+    }
+
+    public Command setShooterVelocity(DoubleSupplier setpoint){
+        return shooter 
+            .toSetspeed(setspeed)
+            .andThen(shooter.toSetspeed(setspeed).until(shooter::atSetspeed));
+    }
 
     public Command spinUp(BooleanSupplier fastMode) {
         return Commands.either(
