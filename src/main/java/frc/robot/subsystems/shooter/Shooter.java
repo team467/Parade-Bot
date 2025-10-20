@@ -40,6 +40,10 @@ public class Shooter extends SubsystemBase {
         return inputs.atSetpoint;
     }
 
+    public double getVelocity() {
+        return inputs.velocity;
+    }
+
     public Command toSetpoint(double setpointRPM) {
         return Commands.run(
                 () -> {
