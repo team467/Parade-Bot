@@ -24,6 +24,8 @@ public interface ShooterIO {
     default void setPercent(double percent) {}
 
     default void setVoltage(double voltage) {}
+    default void setVelocity(double velocity) {}
+    default void goToVelocity() {}
 
     default void stop() {}
 }

@@ -12,6 +12,7 @@ public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
+
     public Shooter(ShooterIO io) {
         this.io = io;
         this.inputs = new ShooterIOInputsAutoLogged();
@@ -44,12 +45,12 @@ public class Shooter extends SubsystemBase {
                 this
         );
     }
-        public Command runPercent(double percent){
+        public Command runPercent(double percent) {
             return Commands.run(() -> {
-                io.setPercent(percent);
-            },
+                        io.setPercent(percent);
+                    },
                     this);
-            }
+        }
 
 
 }
