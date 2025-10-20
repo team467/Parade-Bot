@@ -78,7 +78,8 @@ public class RobotContainer {
                       .onTrue(orchestrator.shootOnce(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
 
-              driverController.x().whileTrue(orchestrator.shootCycleDistance()).onFalse(shooter.stop());
+              //driverController.x().whileTrue(orchestrator.shootCycleDistance()).onFalse(shooter.stop());
+              driverController.x().whileTrue(orchestrator.shootCyclePID(0)).onFalse(shooter.stop()); // TODO: change the RPM
 
               driverController.leftTrigger().onTrue(indexer.indexUntilSwitch());
 
