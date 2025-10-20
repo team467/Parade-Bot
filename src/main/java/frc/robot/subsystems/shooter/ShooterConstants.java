@@ -4,7 +4,7 @@ public class ShooterConstants {
 
     public static final double KP = 0.0;
 
-    public static final TunableNumber KD = 0.0;
+    public static final double KD = 0.0;
 
     public static final double SPEED = 0.8;
 

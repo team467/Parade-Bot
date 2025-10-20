@@ -17,6 +17,7 @@ public class Orchestrator {
         this.indexer = indexer;
         this.shooter = shooter;
     }
+    
 
     public Command spinUp(BooleanSupplier fastMode) {
         return Commands.either(

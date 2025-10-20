@@ -51,6 +51,7 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
         inputs.velocity = encoder.getVelocity();
+        inputs.angularVelocity = encoder.getAngularVelocity();
     }
 
     public void setPercent(double percent) {
