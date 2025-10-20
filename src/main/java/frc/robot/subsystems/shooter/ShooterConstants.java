@@ -13,4 +13,8 @@ public class ShooterConstants {
     public static final double SPINUP_SECONDS = 0.6;
 
     public static final double TOLERANCE = 0.1;
+
+    public static final double PID_P = 15.0;
+
+    public static final double PID_D = 7.0;
 }

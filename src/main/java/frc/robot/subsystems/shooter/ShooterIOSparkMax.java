@@ -36,7 +36,7 @@ public class ShooterIOSparkMax implements ShooterIO {
                 .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAlternateOrExternalEncoder)
                 .positionWrappingEnabled(false)
-                .pidf(15, 0.0, 7, 0.0); // TODO: Fix arbitrary values
+                .pidf(PID_P, 0.0, PID_D, 0.0);
 
         EncoderConfig enc = new EncoderConfig();
         enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
