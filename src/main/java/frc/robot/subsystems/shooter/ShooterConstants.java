@@ -2,6 +2,10 @@ package frc.robot.subsystems.shooter;
 
 public class ShooterConstants {
 
+    public static final double KP = 0.0;
+
+    public static final TunableNumber KD = 0.0;
+
     public static final double SPEED = 0.8;
 
     public static final double REVERSE_SHOOTER_PERCENT = -0.5;

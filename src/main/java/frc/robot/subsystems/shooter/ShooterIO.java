@@ -10,13 +10,19 @@ public interface ShooterIO {
 
         public double velocity;
 
+        public double setPoint = 0.0;
+
         public double appliedVolts;
 
         public double currentAmps;
 
+        public double angularVelocity;
+
         public double temperature;
 
         public boolean readyToShoot = false;
+
+        public boolean atSetpoint = false;
     }
 
     default void updateInputs(ShooterIOInputs inputs) {}
@@ -24,6 +30,8 @@ public interface ShooterIO {
     default void setPercent(double percent) {}
 
     default void setVoltage(double voltage) {}
+
+    default void gotoSetpoint() {}
 
     default void stop() {}
 }
