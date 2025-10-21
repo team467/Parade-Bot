@@ -37,9 +37,17 @@ public class Shooter extends SubsystemBase {
 }
 
 
-    public Command toVelocity(double velocity) {
+    public Command toVelocity(double velocityRPM) {
         return Commands.run(
-                () -> io.setVelocity(velocity),
+                () -> io.setVelocity(velocityRPM),
+                this
+        );
+    }
+    public Command fullSpeed() {
+        return Commands.run(
+                () -> {
+                    io.setPercent(1);
+                },
                 this
         );
     }
@@ -49,6 +57,5 @@ public class Shooter extends SubsystemBase {
             },
                     this);
             }
-
 
 }

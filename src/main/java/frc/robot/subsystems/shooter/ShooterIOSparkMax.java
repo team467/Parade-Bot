@@ -27,19 +27,22 @@ public class ShooterIOSparkMax implements ShooterIO {
 
         var config = new SparkMaxConfig();
         config.inverted(false)
-                .idleMode(IdleMode.kCoast) // Coast mode for flywheels
+                .idleMode(IdleMode.kCoast)
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
 
-        config.encoder
+        config
+                .encoder
                 .positionConversionFactor(ENCODER_POSITION_CONVERSION_FACTOR)
                 .velocityConversionFactor(ENCODER_VELOCITY_CONVERSION_FACTOR);
 
-        config.closedLoop
+        config
+                .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-                .pidf(0.0001, 0.0, 0.0, 0.0); // Start with small P for velocity control
+                .pidf(0.0001, 0.0, 0.0, 0.0);
 
-        config.signals
+        config
+                .signals
                 .primaryEncoderVelocityAlwaysOn(true)
                 .primaryEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20)
@@ -54,17 +57,16 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.temperature = motor.getMotorTemperature();
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
-        inputs.velocity = encoder.getVelocity();
+        inputs.velocityRPM = encoder.getVelocity();
         inputs.targetVelocityRPM = targetVelocityRPM;
 
         inputs.atTargetVelocity =
                 targetVelocityRPM > 0 &&
-                        Math.abs(targetVelocityRPM - inputs.velocity) < TOLERANCE;
+                        Math.abs(targetVelocityRPM - inputs.velocityRPM) < TOLERANCE;
     }
 
     @Override
     public void setPercent(double percent) {
-        targetVelocityRPM = 0.0; // Not using velocity control
         motor.set(percent);
     }
 
@@ -76,7 +78,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     @Override
     public void setVoltage(double volts) {
-        targetVelocityRPM = 0.0; // Not using velocity control
         motor.setVoltage(volts);
     }
 

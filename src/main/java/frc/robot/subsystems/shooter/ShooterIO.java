@@ -1,16 +1,17 @@
 package frc.robot.subsystems.shooter;
 
-import org.ejml.dense.row.factory.DecompositionFactory_CDRM;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
 
     @AutoLog
     class ShooterIOInputs {
-        public double velocity;
+        public double velocityRPM;
         public double appliedVolts;
         public double currentAmps;
         public double temperature;
+        public double targetVelocityRPM = 0.0;
+        public boolean atTargetVelocity;
         public boolean readyToShoot = false;
     }
 
@@ -18,7 +19,7 @@ public interface ShooterIO {
 
     default void setPercent(double percent) {}
 
-    default void setVelocity(double velocity) {}
+    default void setVelocity(double velocityRPM) {}
 
     default void setVoltage(double voltage) {}
 
