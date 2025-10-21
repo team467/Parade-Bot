@@ -15,11 +15,13 @@ public class Shooter extends SubsystemBase {
     public Shooter(ShooterIO io) {
         this.io = io;
         this.inputs = new ShooterIOInputsAutoLogged();
+        this.io.setSpeed(0.5); // TODO: Change the random value
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
+        io.goToSetpoint();
         Logger.processInputs("Shooter", inputs);
     }
 
@@ -36,16 +38,6 @@ public class Shooter extends SubsystemBase {
          );
 }
 
-
-    public Command speedUp() {
-        return Commands.run(
-                () -> {
-                    io.setPercent(ShooterConstants.SPEED);
-                },
-                this
-        );
-    }
-
     public Command fullSpeed() {
         return Commands.run(
                 () -> {
@@ -55,5 +47,30 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public Command runPercent(double percent){
+        return Commands.run(() -> {
+            io.setPercent(percent);
+        },
+                this);
+    }
 
+    public boolean atSetpoint() {
+        return inputs.atSetpoint;
+    }
+
+    public Command toSetpoint(double setpointPercent) {
+        return Commands.run(
+                () -> {
+                    io.setSpeed(setpointPercent);
+                },
+                this);
+    }
+
+    public Command toSetpoint(DoubleSupplier setpointPercent) {
+        return Commands.run(
+                () -> {
+                    io.setSpeed(setpointPercent.getAsDouble());
+                },
+                this);
+    }
 }

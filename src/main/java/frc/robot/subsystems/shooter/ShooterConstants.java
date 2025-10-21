@@ -2,8 +2,6 @@ package frc.robot.subsystems.shooter;
 
 public class ShooterConstants {
 
-    public static final double SPEED = 0.8;
-
     public static final double REVERSE_SHOOTER_PERCENT = -0.5;
 
     public static final int SHOOTER_MOTOR_ID = 8;
@@ -12,5 +10,11 @@ public class ShooterConstants {
 
     public static final double ENCODER_VELOCITY_CONVERSION = 1.0;
 
-    public static final double SPINUP_SECONDS = 0.1;
+    public static final double SPINUP_SECONDS = 0.6;
+
+    public static final double TOLERANCE = 0.1;
+
+    public static final double PID_P = 15.0;
+
+    public static final double PID_D = 7.0;
 }

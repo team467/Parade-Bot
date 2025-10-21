@@ -16,8 +16,14 @@ public interface ShooterIO {
 
         public double temperature;
 
+        public double angularVelocity;
+
         public boolean readyToShoot = false;
+
+        public boolean atSetpoint = false;
     }
+
+    default void setSpeed(double setpoint) {}
 
     default void updateInputs(ShooterIOInputs inputs) {}
 
@@ -26,4 +32,7 @@ public interface ShooterIO {
     default void setVoltage(double voltage) {}
 
     default void stop() {}
+
+    default void goToSetpoint() {}
+
 }

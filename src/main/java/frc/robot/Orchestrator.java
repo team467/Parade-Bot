@@ -1,27 +1,48 @@
 package frc.robot;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 
 public class Orchestrator {
     private final Indexer indexer;
     private final Shooter shooter;
+    @AutoLogOutput
+    private double Distance  = 300.0;
+    @AutoLogOutput private double shootingPower = 0.0;
 
     public Orchestrator(Indexer indexer, Shooter shooter) {
         this.indexer = indexer;
         this.shooter = shooter;
     }
+    public Command spinUpDistance(Double distance) {
+        Distance = distance;
+        double percent = (8.331 * Math.pow(10, -5) * Math.pow(distance, 2) + 0.0734 * distance + 15.709) / 100;
+        Logger.recordOutput("Shooter/Percent", percent);
+        return shooter.runPercent(percent);
+    }
+    public Command shootCycleDistance() {
+        return Commands.parallel(
+                spinUpDistance(420.0),
+                Commands.sequence(
+                                intakeIfNeeded(),
+                                Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
+                                indexer.indexIntoShooter())
+                        .repeatedly());
+    }
 
     public Command spinUp(BooleanSupplier fastMode) {
         return Commands.either(
                 shooter.fullSpeed(),
-                shooter.speedUp(),
+                shooter.runPercent(0.8),
                  fastMode);
     }
 
@@ -49,6 +70,21 @@ public class Orchestrator {
                                 Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
                                 indexer.indexIntoShooter())
                         .repeatedly());
+    }
+
+    public Command shootOnceSetpoint(DoubleSupplier setpoint) {
+        return Commands.parallel(
+                shooter.toSetpoint(setpoint)
+                        .withTimeout(0.001)
+                        .andThen(shooter.toSetpoint(setpoint).until(shooter::atSetpoint)),
+                Commands.sequence(
+                        intakeIfNeeded(),
+                        Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
+                        indexer.indexIntoShooter()));
+    }
+
+    public Command shootCycleSetpoint(DoubleSupplier setpoint) {
+        return shootOnceSetpoint(setpoint).repeatedly();
     }
 
     public Command reverseAll() {
