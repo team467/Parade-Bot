@@ -7,21 +7,18 @@ public interface ShooterIO {
 
     @AutoLog
     class ShooterIOInputs {
-
         public double velocity;
-
         public double appliedVolts;
-
         public double currentAmps;
-
         public double temperature;
-
         public boolean readyToShoot = false;
     }
 
     default void updateInputs(ShooterIOInputs inputs) {}
 
     default void setPercent(double percent) {}
+
+    default void setVelocity(double velocity) {}
 
     default void setVoltage(double voltage) {}
 

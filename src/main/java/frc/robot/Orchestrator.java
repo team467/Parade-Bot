@@ -40,7 +40,6 @@ public class Orchestrator {
 
     public Command spinUp(BooleanSupplier fastMode) {
         return Commands.either(
-                shooter.fullSpeed(),
                 shooter.runPercent(0.8),
                  fastMode);
     }
