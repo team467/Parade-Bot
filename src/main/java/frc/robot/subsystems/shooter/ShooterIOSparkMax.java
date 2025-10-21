@@ -34,7 +34,7 @@ public class ShooterIOSparkMax implements ShooterIO {
                 .smartCurrentLimit(30);
         config
                 .closedLoop
-                .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAlternateOrExternalEncoder)
+                .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
                 .positionWrappingEnabled(false)
                 .pidf(PID_P, 0.0, PID_D, 0.0);
 
