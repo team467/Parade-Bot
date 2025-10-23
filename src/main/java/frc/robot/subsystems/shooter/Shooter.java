@@ -37,15 +37,12 @@ public class Shooter extends SubsystemBase {
 }
 
 
-    public Command speedUp() {
+    public Command toVelocity(double velocityRPM) {
         return Commands.run(
-                () -> {
-                    io.setPercent(ShooterConstants.SPEED);
-                },
+                () -> io.setVelocity(velocityRPM),
                 this
         );
     }
-
     public Command fullSpeed() {
         return Commands.run(
                 () -> {
@@ -54,6 +51,11 @@ public class Shooter extends SubsystemBase {
                 this
         );
     }
-
+        public Command runPercent(double percent){
+            return Commands.run(() -> {
+                io.setPercent(percent);
+            },
+                    this);
+            }
 
 }
