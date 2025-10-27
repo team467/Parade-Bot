@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ShooterIOSparkMax implements ShooterIO {
 
@@ -23,13 +24,15 @@ public class ShooterIOSparkMax implements ShooterIO {
     private final SparkClosedLoopController controller;
 
     private double setpointRPM;
+    private SimpleMotorFeedforward feedforward;
+
+
 
     public ShooterIOSparkMax() {
         motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
-
+        feedforward = new SimpleMotorFeedforward(0,0.39,0.52);
         controller = motor.getClosedLoopController();
-
-        var config = new SparkMaxConfig();
+        var config  = new SparkMaxConfig();
         config.inverted(false)
                 .idleMode(IdleMode.kBrake)
                 .voltageCompensation(12)
@@ -39,7 +42,8 @@ public class ShooterIOSparkMax implements ShooterIO {
         loopConfig
                 .feedbackSensor(kPrimaryEncoder)
                 .positionWrappingEnabled(false)
-                .pid(0.000009,0.0000003,0.0001); // TODO: tune PIDF values
+                .pid(0.000009,0.0000003,0.0001);// TODO: tune PIDF values
+
 
         EncoderConfig enc = new EncoderConfig();
         enc.velocityConversionFactor(ENCODER_VELOCITY_CONVERSION);
@@ -69,6 +73,9 @@ public class ShooterIOSparkMax implements ShooterIO {
     public void setVoltage(double volts) {
         motor.setVoltage(volts);
     }
+    public double returnVelocity(){
+        return this.encoder.getVelocity();
+    }
 
     @Override
     public void setVelocity(double setpointRPM) {
@@ -77,6 +84,7 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     @Override
     public void goToSetpoint() {
+        motor.setVoltage(feedforward.calculateWithVelocities(this.encoder.getVelocity(), this.setpointRPM));
         controller.setReference(this.setpointRPM, SparkBase.ControlType.kVelocity);
     }
 
