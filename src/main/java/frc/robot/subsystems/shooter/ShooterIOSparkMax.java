@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import static com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder;
 import static frc.robot.subsystems.shooter.ShooterConstants.*;
 
 import com.revrobotics.RelativeEncoder;
@@ -34,19 +35,18 @@ public class ShooterIOSparkMax implements ShooterIO {
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
 
-        config
-                .closedLoop
-                .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAlternateOrExternalEncoder)
+        var loopConfig = new ClosedLoopConfig();
+        loopConfig
+                .feedbackSensor(kPrimaryEncoder)
                 .positionWrappingEnabled(false)
-                .pidf(0,0,0,0); // TODO: tune PIDF values
+                .pid(0.000009,0.0000003,0.0001); // TODO: tune PIDF values
 
         EncoderConfig enc = new EncoderConfig();
-        enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
         enc.velocityConversionFactor(ENCODER_VELOCITY_CONVERSION);
         config.apply(enc);
+        config.apply(loopConfig);
 
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
         encoder = motor.getEncoder();
 
     }
@@ -56,9 +56,10 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.temperature = motor.getMotorTemperature();
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
-        inputs.velocity = encoder.getVelocity(); // RPM
+        inputs.velocity = encoder.getVelocity();// RPM
         inputs.setpointRPM = setpointRPM;
         inputs.atSetpoint = Math.abs(setpointRPM - inputs.velocity) < TOLERANCE; // TODO: change tolerance
+
     }
 
     public void setPercent(double percent) {
