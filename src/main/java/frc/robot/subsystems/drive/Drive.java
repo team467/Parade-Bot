@@ -36,7 +36,7 @@ public class Drive extends SubsystemBase {
     public Command toAprilTag() {
         return Commands.run(
                 () -> {
-                    io.rotateToTag();;
+                    io.rotateToTag();
                 }, this
         );
     }
