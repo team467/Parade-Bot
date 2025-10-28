@@ -4,18 +4,24 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.vision.Vision;
 
 
 public class Orchestrator {
     private final Indexer indexer;
     private final Shooter shooter;
+    private final Vision vision;
+    private final Drive drive;
 
-    public Orchestrator(Indexer indexer, Shooter shooter) {
+    public Orchestrator(Indexer indexer, Shooter shooter, Vision vision, Drive drive) {
         this.indexer = indexer;
         this.shooter = shooter;
+        this.vision = vision;
+        this.drive = drive;
     }
 
     public Command spinUp(BooleanSupplier fastMode) {
@@ -49,6 +55,13 @@ public class Orchestrator {
                                 Commands.waitSeconds(ShooterConstants.SPINUP_SECONDS),
                                 indexer.indexIntoShooter())
                         .repeatedly());
+    }
+
+    public Command rotateToTag() {
+        return Commands.parallel(
+                vision.updateYaw(),
+                drive.toAprilTag()
+        );
     }
 
     public Command reverseAll() {

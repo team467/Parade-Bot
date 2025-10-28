@@ -32,4 +32,12 @@ public class Drive extends SubsystemBase {
                 io.setVoltageRight(speeds.right * 7);
             }, this);
     }
+
+    public Command toAprilTag() {
+        return Commands.run(
+                () -> {
+                    io.rotateToTag();;
+                }, this
+        );
+    }
 }

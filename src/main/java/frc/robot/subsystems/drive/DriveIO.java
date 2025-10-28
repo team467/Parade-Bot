@@ -26,6 +26,5 @@ public interface DriveIO {
 
     default void setVelocityRadPerSecR(double rightVelocityRadPerSec){}
 
-
-
+    default public void rotateToTag() {}
 }
