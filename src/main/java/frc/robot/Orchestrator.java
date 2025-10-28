@@ -58,10 +58,10 @@ public class Orchestrator {
     }
 
     public Command rotateToTag() {
-        return Commands.parallel(
+        return Commands.sequence(
                 vision.updateYaw(),
                 drive.toAprilTag()
-        );
+        ).repeatedly();
     }
 
     public Command reverseAll() {
