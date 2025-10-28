@@ -116,6 +116,6 @@ public class DriveIOSparkMax implements DriveIO{
     @Override
     public void rotateToTag() {
         leftLeaderController.setReference(RobotState.get().vision_yaw * RPM_PER_RAD, SparkBase.ControlType.kVelocity);
-        rightLeaderController.setReference(RobotState.get().vision_yaw * RPM_PER_RAD, SparkBase.ControlType.kVelocity);
+        rightLeaderController.setReference(-RobotState.get().vision_yaw * RPM_PER_RAD, SparkBase.ControlType.kVelocity);
     }
 }
