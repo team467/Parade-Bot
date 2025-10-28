@@ -83,7 +83,7 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     @Override
     public void goToSetpoint(){
-        controller.setReference(this.setpointRPM, SparkBase.ControlType.kVelocity);
+        //controller.setReference(this.setpointRPM, SparkBase.ControlType.kVelocity);
     }
 
     public void stop() {

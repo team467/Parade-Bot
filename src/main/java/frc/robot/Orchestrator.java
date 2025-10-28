@@ -82,9 +82,9 @@ public class Orchestrator {
     }
 
     public Command shootCyclePID(double setpointRPM) {
-        return Commands.parallel(
-                shooter.runFF(),
-                shooter.toSetpoint(setpointRPM),
+        return Commands.sequence(
+                Commands.sequence(shooter.toSetpoint((setpointRPM)),
+                shooter.runFF()),
                 Commands.sequence(
                                 intakeIfNeeded(),
                                 Commands.waitUntil(shooter::atSetpoint),
