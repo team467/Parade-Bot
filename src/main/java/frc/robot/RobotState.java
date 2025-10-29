@@ -1,7 +1,7 @@
 package frc.robot;
 
 public class RobotState {
-    private static RobotState state;
+    private static final RobotState state;
     public double vision_yaw;
 
     static {

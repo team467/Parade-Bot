@@ -2,17 +2,12 @@ package frc.robot.subsystems.drive;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.RobotState;
-
-import static com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder;
-import static frc.robot.subsystems.drive.DriveConstants.RPM_PER_RAD;
 
 public class DriveIOSparkMax implements DriveIO{
     private final SparkMax leftLeader;
@@ -23,8 +18,7 @@ public class DriveIOSparkMax implements DriveIO{
     private final RelativeEncoder leftLeaderEncoder;
     private final RelativeEncoder rightLeaderEncoder;
 
-    private SparkClosedLoopController leftLeaderController;
-    private SparkClosedLoopController rightLeaderController;
+    private final PIDController pidController;
 
     public DriveIOSparkMax(){
         leftLeader = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
@@ -33,9 +27,6 @@ public class DriveIOSparkMax implements DriveIO{
         rightLeader = new SparkMax(5, SparkLowLevel.MotorType.kBrushless);
         rightFollower = new SparkMax(6, SparkLowLevel.MotorType.kBrushless);
         rightLeaderEncoder  = rightLeader.getEncoder();
-
-        leftLeaderController = leftLeader.getClosedLoopController();
-        rightLeaderController = rightLeader.getClosedLoopController();
 
         var LeftLeaderConfig = new SparkMaxConfig();
         LeftLeaderConfig.inverted(false)
@@ -63,19 +54,8 @@ public class DriveIOSparkMax implements DriveIO{
                 .smartCurrentLimit(60)
                 .follow(5, false);
 
-        var loopConfig = new ClosedLoopConfig();
-        loopConfig
-                .feedbackSensor(kPrimaryEncoder)
-                .positionWrappingEnabled(false)
-                .pid(0.000009,0.0000003,0.0001);// TODO: tune PIDF values
+        pidController = new PIDController(DriveConstants.PID_P, DriveConstants.PID_I, DriveConstants.PID_D);
 
-//        EncoderConfig enc = new EncoderConfig();
-//        enc.velocityConversionFactor(RPM_TO_RADS);
-//        config.apply(enc);
-//        config.apply(loopConfig);
-
-        LeftLeaderConfig.apply(loopConfig);
-        RightLeaderConfig.apply(loopConfig);
         leftLeader.configure(LeftLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         leftFollower.configure(LeftFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         rightLeader.configure(RightLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
@@ -115,7 +95,8 @@ public class DriveIOSparkMax implements DriveIO{
 
     @Override
     public void rotateToTag() {
-        leftLeaderController.setReference(RobotState.get().vision_yaw * RPM_PER_RAD, SparkBase.ControlType.kVelocity);
-        rightLeaderController.setReference(-RobotState.get().vision_yaw * RPM_PER_RAD, SparkBase.ControlType.kVelocity);
+        var newVelocity = pidController.calculate(RobotState.get().vision_yaw, 0);
+        leftLeader.set(newVelocity);
+        rightLeader.set(-newVelocity);
     }
 }
