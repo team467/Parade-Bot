@@ -27,7 +27,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Command updateYaw() {
-        return Commands.runOnce(() -> {RobotState.get().vision_yaw = inputs.yaw;}, this);
+        return Commands.runOnce(() -> {RobotState.get().visionYaw = inputs.yaw;}, this);
     }
     public double distanceFromTarget(){
         return inputs.distanceFromTarget;

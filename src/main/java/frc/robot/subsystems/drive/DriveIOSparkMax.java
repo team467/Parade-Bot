@@ -95,7 +95,7 @@ public class DriveIOSparkMax implements DriveIO{
 
     @Override
     public void rotateToTag() {
-        var newVelocity = pidController.calculate(RobotState.get().vision_yaw, 0);
+        var newVelocity = pidController.calculate(RobotState.get().visionYaw, 0);
         leftLeader.set(newVelocity);
         rightLeader.set(-newVelocity);
     }
