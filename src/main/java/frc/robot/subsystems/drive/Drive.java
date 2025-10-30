@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
@@ -29,5 +30,13 @@ public class Drive extends SubsystemBase {
                 io.setVoltageLeft(speeds.left * 7);
                 io.setVoltageRight(speeds.right * 7);
             }, this);
+    }
+
+    public Command toAprilTag(double yaw) {
+        return Commands.run(
+                () -> {
+                    io.rotateToTag(yaw);
+                }, this
+        );
     }
 }

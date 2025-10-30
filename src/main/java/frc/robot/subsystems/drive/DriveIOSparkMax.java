@@ -2,11 +2,12 @@ package frc.robot.subsystems.drive;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.PIDController;
+import java.lang.Math;
 
 public class DriveIOSparkMax implements DriveIO{
     private final SparkMax leftLeader;
@@ -17,6 +18,7 @@ public class DriveIOSparkMax implements DriveIO{
     private final RelativeEncoder leftLeaderEncoder;
     private final RelativeEncoder rightLeaderEncoder;
 
+    private final PIDController pidController;
 
     public DriveIOSparkMax(){
         leftLeader = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
@@ -51,6 +53,9 @@ public class DriveIOSparkMax implements DriveIO{
                 .voltageCompensation(12)
                 .smartCurrentLimit(60)
                 .follow(5, false);
+
+        pidController = new PIDController(DriveConstants.PID_P, DriveConstants.PID_I, DriveConstants.PID_D);
+
         leftLeader.configure(LeftLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         leftFollower.configure(LeftFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         rightLeader.configure(RightLeaderConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
@@ -88,4 +93,12 @@ public class DriveIOSparkMax implements DriveIO{
         rightLeader.set(rightVelocityRadPerSec);
     }
 
+    @Override
+    public void rotateToTag(double yaw) {
+        var newVelocity = pidController.calculate(yaw, 0);
+        newVelocity = Math.max(-1, newVelocity);
+        newVelocity = Math.min(1, newVelocity);
+        leftLeader.set(newVelocity);
+        rightLeader.set(-newVelocity);
+    }
 }

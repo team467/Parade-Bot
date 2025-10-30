@@ -34,7 +34,7 @@ public class RobotContainer {
     private final Vision vision;
    private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
     private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
-    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
+    private final Orchestrator orchestrator;
     private final CommandXboxController driverController = new CommandXboxController(0);
     private boolean fastMode = false;
     private final Trigger fastModeTrigger = new Trigger(() -> fastMode);
@@ -45,6 +45,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     drive = new Drive(new DriveIOSparkMax());
     vision =  new Vision(new VisionIOPhotonVision("VGA_USB_Camera"){});
+    orchestrator = new Orchestrator(indexer, shooter, vision, drive);
     configureBindings();
   }
 
@@ -67,9 +68,9 @@ public class RobotContainer {
                               () -> driverController.getHID()
                                       .setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0.0)
                       ));
-                      drive.setDefaultCommand(drive.arcadeDrive(
-                              driverController::getLeftY,
-                              driverController::getRightY));
+          drive.setDefaultCommand(drive.arcadeDrive(
+                  driverController::getLeftY,
+                  driverController::getRightY));
       
               driverController
                       .rightTrigger()
@@ -85,6 +86,7 @@ public class RobotContainer {
                       .rightBumper()
                       .onTrue(orchestrator.shootOnce(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
+              driverController.x().whileTrue(orchestrator.rotateToTag());
     }
 
     /**
