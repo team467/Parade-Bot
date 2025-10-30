@@ -7,7 +7,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.RobotState;
 
 public class DriveIOSparkMax implements DriveIO{
     private final SparkMax leftLeader;
@@ -94,8 +93,8 @@ public class DriveIOSparkMax implements DriveIO{
     }
 
     @Override
-    public void rotateToTag() {
-        var newVelocity = pidController.calculate(RobotState.get().visionYaw, 0);
+    public void rotateToTag(double yaw) {
+        var newVelocity = pidController.calculate(yaw, 0);
         leftLeader.set(newVelocity);
         rightLeader.set(-newVelocity);
     }

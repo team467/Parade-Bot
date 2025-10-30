@@ -3,7 +3,6 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotState;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -26,9 +25,6 @@ public class Vision extends SubsystemBase {
         Logger.processInputs("Vision", inputs);
     }
 
-    public Command updateYaw() {
-        return Commands.runOnce(() -> {RobotState.get().visionYaw = inputs.yaw;}, this);
-    }
     public double distanceFromTarget(){
         return inputs.distanceFromTarget;
     }

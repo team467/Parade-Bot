@@ -10,7 +10,6 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.vision.Vision;
 
-
 public class Orchestrator {
     private final Indexer indexer;
     private final Shooter shooter;
@@ -59,8 +58,7 @@ public class Orchestrator {
 
     public Command rotateToTag() {
         return Commands.sequence(
-                vision.updateYaw(),
-                drive.toAprilTag()
+                drive.toAprilTag(vision.getYaw())
         ).repeatedly();
     }
 

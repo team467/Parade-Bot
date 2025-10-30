@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import frc.robot.RobotState;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
@@ -33,10 +32,10 @@ public class Drive extends SubsystemBase {
             }, this);
     }
 
-    public Command toAprilTag() {
+    public Command toAprilTag(double yaw) {
         return Commands.run(
                 () -> {
-                    io.rotateToTag();
+                    io.rotateToTag(yaw);
                 }, this
         );
     }
