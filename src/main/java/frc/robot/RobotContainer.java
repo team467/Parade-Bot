@@ -79,9 +79,8 @@ public class RobotContainer {
                       .onFalse(orchestrator.stopAll());
 
               //driverController.x().whileTrue(orchestrator.shootCycleDistance()).onFalse(shooter.stop());
-              driverController.x().whileTrue(orchestrator.shootCyclePID(29.44)).onFalse(shooter.stop()); // TODO: change the RPM
-              driverController.a().whileTrue(shooter.KsFlywheelCharacterization()).onFalse(shooter.stop());
-              driverController.b().onTrue(shooter.runFF());
+              driverController.x().whileTrue(orchestrator.shootCyclePID(4500)).onFalse(shooter.stop()); // TODO: change the RPM
+              driverController.a().whileTrue(shooter.KsFlywheelCharacterization());
               driverController.leftTrigger().onTrue(indexer.indexUntilSwitch());
 
               driverController.y().onTrue(indexer.indexIntoShooter());

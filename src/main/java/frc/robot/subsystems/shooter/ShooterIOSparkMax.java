@@ -45,7 +45,7 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 
         EncoderConfig enc = new EncoderConfig();
-        enc.velocityConversionFactor(RPM_TO_RADS);
+        enc.velocityConversionFactor(ENCODER_VELOCITY_CONVERSION);
         config.apply(enc);
         config.apply(loopConfig);
 
