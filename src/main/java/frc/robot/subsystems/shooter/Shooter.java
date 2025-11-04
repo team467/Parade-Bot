@@ -74,7 +74,7 @@ public class Shooter extends SubsystemBase {
                 io.setPercent(percent);
             },
                     this);
-            }
+            } //
 
 
 }
