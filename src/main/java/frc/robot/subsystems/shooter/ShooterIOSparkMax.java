@@ -30,7 +30,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     public ShooterIOSparkMax() {
         motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
-        feedforward = new SimpleMotorFeedforward(0,0.39,0.52);
         controller = motor.getClosedLoopController();
         var config  = new SparkMaxConfig();
         config.inverted(false)
@@ -83,8 +82,7 @@ public class ShooterIOSparkMax implements ShooterIO {
     }
 
     @Override
-    public void goToSetpoint() {
-        motor.setVoltage(feedforward.calculateWithVelocities(this.encoder.getVelocity(), this.setpointRPM));
+    public void goToSetpoint(){
         controller.setReference(this.setpointRPM, SparkBase.ControlType.kVelocity);
     }
 
