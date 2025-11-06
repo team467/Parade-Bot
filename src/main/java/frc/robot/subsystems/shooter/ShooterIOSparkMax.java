@@ -23,7 +23,7 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     private final SparkClosedLoopController controller;
 
-    private double setpointRPM;
+    private double setpointRPM = 3000;
     private SimpleMotorFeedforward feedforward;
 
 
@@ -41,7 +41,7 @@ public class ShooterIOSparkMax implements ShooterIO {
         loopConfig
                 .feedbackSensor(kPrimaryEncoder)
                 .positionWrappingEnabled(false)
-                .pid(0.000009,0.0000003,0.0001);// TODO: tune PIDF values
+                .pid(PID_P, PID_I, PID_D);// TODO: tune PID values
 
 
         EncoderConfig enc = new EncoderConfig();
