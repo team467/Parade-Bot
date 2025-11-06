@@ -77,18 +77,15 @@ public class Orchestrator {
                 Commands.sequence(
                         intakeIfNeeded(),
                         Commands.waitUntil(shooter::atSetpoint),
-                        Commands.runOnce(() -> Logger.recordOutput("Shooter/VelocityBeforeShoot", shooter.getVelocity())),
                         indexer.indexIntoShooter()));
     }
 
     public Command shootCyclePID(double setpointRPM) {
         return Commands.parallel(
-                shooter.runFF(),
                 shooter.toSetpoint(setpointRPM),
                 Commands.sequence(
                                 intakeIfNeeded(),
                                 Commands.waitUntil(shooter::atSetpoint),
-                                Commands.runOnce(() -> Logger.recordOutput("Shooter/VelocityBeforeShoot", shooter.getVelocity())),
                                 indexer.indexIntoShooter())
                         .repeatedly());
     }
