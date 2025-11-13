@@ -41,7 +41,7 @@ public class ShooterIOSparkMax implements ShooterIO {
         loopConfig
                 .feedbackSensor(kPrimaryEncoder)
                 .positionWrappingEnabled(false)
-                .pid(PID_P, PID_I, PID_D);// TODO: tune PID values
+                .pid(PID_P.get(), PID_I.get(), PID_D.get());// TODO: tune PID values
 
 
         EncoderConfig enc = new EncoderConfig();

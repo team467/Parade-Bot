@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.MathShared;
 import edu.wpi.first.math.MathUtil;
+import frc.lib.utils.TunableNumber;
 
 public class ShooterConstants {
 
@@ -15,7 +16,9 @@ public class ShooterConstants {
 
     public static final double TOLERANCE = 0.1; // TODO: change tolerance
 
-    public static final double PID_P = 0.000009;
-    public static final double PID_I = 0.0000003;
-    public static final double PID_D = 0.0001;
+
+    public static final TunableNumber PID_P = new TunableNumber("Shooter/P", 0.00005); //0.0000009
+    public static final TunableNumber PID_I = new TunableNumber("Shooter/I",0.0000001); //0.0000003
+    public static final TunableNumber PID_D = new TunableNumber("Shooter/D", 0.0000001); // 0.0001
+
 }
