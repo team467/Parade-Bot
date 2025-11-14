@@ -21,7 +21,7 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
-//        io.goToSetpoint();
+        io.goToSetpoint();
     }
 
     public Command stop() {
@@ -48,7 +48,6 @@ public class Shooter extends SubsystemBase {
         return Commands.run(
                 () -> {
                     io.setVelocity(setpointRPM);
-                    io.goToSetpoint();
                 },
                 this
         );

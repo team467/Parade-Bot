@@ -24,9 +24,6 @@ public class ShooterIOSparkMax implements ShooterIO {
     private final SparkClosedLoopController controller;
 
     private double setpointRPM = 3000;
-    private SimpleMotorFeedforward feedforward;
-
-
 
     public ShooterIOSparkMax() {
         motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
