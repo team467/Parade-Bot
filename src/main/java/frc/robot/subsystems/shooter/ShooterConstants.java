@@ -14,7 +14,7 @@ public class ShooterConstants {
 
     public static final double SPINUP_SECONDS = 0.6;
 
-    public static final double TOLERANCE = 0.1; // TODO: change tolerance
+    public static final double TOLERANCE = 3; // TODO: change tolerance
 
 
     public static final TunableNumber PID_P = new TunableNumber("Shooter/P", 0.00005); //0.0000009
@@ -22,3 +22,6 @@ public class ShooterConstants {
     public static final TunableNumber PID_D = new TunableNumber("Shooter/D", 0.0000001); // 0.0001
 
 }
+// 0.00005
+//0.0000001
+//0.0000001
