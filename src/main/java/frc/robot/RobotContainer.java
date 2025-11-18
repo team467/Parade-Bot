@@ -4,20 +4,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.drive.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveIOSparkMax;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
 
 /**
@@ -80,7 +77,7 @@ public class RobotContainer {
 
               //driverController.x().whileTrue(orchestrator.shootCycleDistance()).onFalse(shooter.stop());
               driverController.x().whileTrue(orchestrator.shootCyclePID(2000)).onFalse(shooter.stop()); // TODO: change the RPM
-//              driverController.a().whileTrue(shooter.KsFlywheelCharacterization());
+              driverController.a().whileTrue(orchestrator.shootDistance(Units.Inches.of(168.5))).onFalse(shooter.stop()); // TODO: Test other distances
               driverController.leftTrigger().onTrue(indexer.indexUntilSwitch());
 
               driverController.y().onTrue(indexer.indexIntoShooter());

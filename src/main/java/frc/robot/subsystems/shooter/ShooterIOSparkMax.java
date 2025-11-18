@@ -14,7 +14,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ShooterIOSparkMax implements ShooterIO {
 
@@ -48,7 +47,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         encoder = motor.getEncoder();
-
     }
 
     @Override
@@ -77,6 +75,10 @@ public class ShooterIOSparkMax implements ShooterIO {
     public void setVelocity(double setpointRPM) {
         this.setpointRPM = setpointRPM;
     }
+
+    @Override
+    public void setDistance(double distance) {this.setpointRPM = 113.29128 * Math.pow(distance,
+                                                                                      0.639824);}
 
     @Override
     public void goToSetpoint(){

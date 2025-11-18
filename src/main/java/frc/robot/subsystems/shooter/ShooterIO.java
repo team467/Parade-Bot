@@ -30,7 +30,9 @@ public interface ShooterIO {
 
     default void setVelocity(double RPM) {}
 
-    default void goToSetpoint() {}
+    default void setDistance(double distance) {}
+
+  default void goToSetpoint() {}
 
     default void stop() {}
 }

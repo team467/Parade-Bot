@@ -1,7 +1,7 @@
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-
+import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.indexer.Indexer;
@@ -10,13 +10,15 @@ import frc.robot.subsystems.shooter.ShooterConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.BooleanSupplier;
+
 
 public class Orchestrator {
     private final Indexer indexer;
     private final Shooter shooter;
     @AutoLogOutput
     private double Distance  = 300.0;
-    @AutoLogOutput private double shootingPower = 0.0;
+    @AutoLogOutput private final double shootingPower = 0.0;
 
     public Orchestrator(Indexer indexer, Shooter shooter) {
         this.indexer = indexer;
@@ -88,6 +90,15 @@ public class Orchestrator {
                                 Commands.waitUntil(shooter::atSetpoint),
                                 indexer.indexIntoShooter())
                         .repeatedly());
+    }
+
+    public Command shootDistance(Measure<DistanceUnit> distance) {
+        return Commands.parallel(
+            shooter.toSetpoint(distance),
+            Commands.sequence(
+                intakeIfNeeded(),
+                Commands.waitUntil(shooter::atSetpoint),
+                indexer.indexIntoShooter()).repeatedly());
     }
 
 
