@@ -15,6 +15,10 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+
+import static frc.robot.Constants.camName;
 
 
 /**
@@ -29,7 +33,8 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
    private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
     private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
-    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
+    private final Vision vision = new Vision(new VisionIOPhotonVision(camName));
+    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter, vision);
     private final CommandXboxController driverController = new CommandXboxController(0);
     private boolean fastMode = false;
     private final Trigger fastModeTrigger = new Trigger(() -> fastMode);

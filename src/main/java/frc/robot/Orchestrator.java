@@ -2,11 +2,13 @@ package frc.robot;
 
 import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -19,10 +21,12 @@ public class Orchestrator {
     @AutoLogOutput
     private double Distance  = 300.0;
     @AutoLogOutput private final double shootingPower = 0.0;
+    private final Vision vision;
 
-    public Orchestrator(Indexer indexer, Shooter shooter) {
+    public Orchestrator(Indexer indexer, Shooter shooter, Vision vision) {
         this.indexer = indexer;
         this.shooter = shooter;
+        this.vision = vision;
     }
     public Command spinUpDistance(Double distance) {
         Distance = distance;
@@ -94,7 +98,7 @@ public class Orchestrator {
 
     public Command shootDistance(Measure<DistanceUnit> distance) {
         return Commands.parallel(
-            shooter.toSetpoint(distance),
+            shooter.toSetpoint(Units.Meters.of(vision.distanceFromTarget())),
             Commands.sequence(
                 intakeIfNeeded(),
                 Commands.waitUntil(shooter::atSetpoint),
