@@ -14,5 +14,5 @@ package frc.robot;
  */
 public final class Constants {
   static public final boolean tuningMode = true;
-  static public final String camName = "somename"; // TODO: Change
+  static public final String camName = "Arucam OV9281(Back)";
 }
