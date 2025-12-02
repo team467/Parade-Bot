@@ -4,21 +4,21 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.drive.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveIOSparkMax;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
+
+import static frc.robot.Constants.camName;
 
 
 /**
@@ -31,10 +31,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive drive;
     // The robot's subsystems and commands are defined here...
-    private final Vision vision;
    private final Indexer indexer = new Indexer(new IndexerIOSparkMax());
     private final Shooter shooter = new Shooter(new ShooterIOSparkMax());
-    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter);
+    private final Vision vision = new Vision(new VisionIOPhotonVision(camName));
+    private final Orchestrator orchestrator = new Orchestrator(indexer, shooter, vision);
     private final CommandXboxController driverController = new CommandXboxController(0);
     private boolean fastMode = false;
     private final Trigger fastModeTrigger = new Trigger(() -> fastMode);
@@ -44,7 +44,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drive = new Drive(new DriveIOSparkMax());
-    vision =  new Vision(new VisionIOPhotonVision("VGA_USB_Camera"){});
     configureBindings();
   }
 
@@ -75,16 +74,27 @@ public class RobotContainer {
                       .rightTrigger()
                       .whileTrue(orchestrator.shootCycle(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
-              driverController.y().whileTrue(shooter.speedUp()).onFalse(shooter.stop());
-              driverController
-                      .leftTrigger()
-                      .whileTrue(orchestrator.reverseAll())
-                      .onFalse(orchestrator.stopAll());
-      
+
               driverController
                       .rightBumper()
                       .onTrue(orchestrator.shootOnce(() -> fastMode))
                       .onFalse(orchestrator.stopAll());
+
+              //driverController.x().whileTrue(orchestrator.shootCycleDistance()).onFalse(shooter.stop());
+              driverController.x().whileTrue(orchestrator.shootCyclePID(2000)).onFalse(shooter.stop()); // TODO: change the RPM
+              driverController.a().whileTrue(orchestrator.shootDistance(Units.Inches.of(168.5))).onFalse(shooter.stop()); // TODO: Test other distances
+              driverController.leftTrigger().onTrue(indexer.indexUntilSwitch());
+
+              driverController.y().onTrue(indexer.indexIntoShooter());
+
+
+              driverController
+                      .leftBumper()
+                      .whileTrue(orchestrator.reverseAll())
+                      .onFalse(orchestrator.stopAll());
+      
+
+
     }
 
     /**

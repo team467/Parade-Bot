@@ -1,13 +1,16 @@
 package frc.robot.subsystems.shooter;
 
+import static com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder;
 import static frc.robot.subsystems.shooter.ShooterConstants.*;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -17,24 +20,33 @@ public class ShooterIOSparkMax implements ShooterIO {
     private final SparkMax motor;
     private final RelativeEncoder encoder;
 
+    private final SparkClosedLoopController controller;
+
+    private double setpointRPM = 3000;
+
     public ShooterIOSparkMax() {
         motor = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
-
-        var config = new SparkMaxConfig();
+        controller = motor.getClosedLoopController();
+        var config  = new SparkMaxConfig();
         config.inverted(false)
                 .idleMode(IdleMode.kBrake)
                 .voltageCompensation(12)
                 .smartCurrentLimit(30);
 
+        var loopConfig = new ClosedLoopConfig();
+        loopConfig
+                .feedbackSensor(kPrimaryEncoder)
+                .positionWrappingEnabled(false)
+                .pid(PID_P.get(), PID_I.get(), PID_D.get());// TODO: tune PID values
+
+
         EncoderConfig enc = new EncoderConfig();
-        enc.positionConversionFactor(ENCODER_POSITION_CONVERSION);
         enc.velocityConversionFactor(ENCODER_VELOCITY_CONVERSION);
         config.apply(enc);
+        config.apply(loopConfig);
 
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
         encoder = motor.getEncoder();
-
     }
 
     @Override
@@ -42,7 +54,10 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.temperature = motor.getMotorTemperature();
         inputs.appliedVolts = motor.getBusVoltage() * motor.getAppliedOutput();
         inputs.currentAmps = motor.getOutputCurrent();
-        inputs.velocity = encoder.getVelocity();
+        inputs.velocity = encoder.getVelocity();// RPM
+        inputs.setpointRPM = setpointRPM;
+        inputs.atSetpoint = Math.abs(setpointRPM - inputs.velocity) < TOLERANCE; // TODO: change tolerance
+
     }
 
     public void setPercent(double percent) {
@@ -51,6 +66,23 @@ public class ShooterIOSparkMax implements ShooterIO {
 
     public void setVoltage(double volts) {
         motor.setVoltage(volts);
+    }
+    public double returnVelocity(){
+        return this.encoder.getVelocity();
+    }
+
+    @Override
+    public void setVelocity(double setpointRPM) {
+        this.setpointRPM = setpointRPM;
+    }
+
+    @Override
+    public void setDistance(double distance) {this.setpointRPM = 113.29128 * Math.pow(distance,
+                                                                                      0.639824);}
+
+    @Override
+    public void goToSetpoint(){
+        controller.setReference(this.setpointRPM, SparkBase.ControlType.kVelocity);
     }
 
     public void stop() {

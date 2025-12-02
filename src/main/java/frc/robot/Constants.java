@@ -13,4 +13,6 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  static public final boolean tuningMode = true;
+  static public final String camName = "Arucam OV9281(Back)";
 }

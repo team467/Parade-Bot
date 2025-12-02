@@ -1,11 +1,6 @@
 package frc.robot.subsystems.vision;
-import edu.wpi.first.math.geometry.*;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import edu.wpi.first.math.geometry.Translation2d;
 import org.photonvision.PhotonCamera;
 public class VisionIOPhotonVision implements VisionIO{
     protected final PhotonCamera camera;
@@ -20,16 +15,14 @@ public class VisionIOPhotonVision implements VisionIO{
         inputs.connected = camera.isConnected();
         var result = camera.getLatestResult();
         if (result.hasTargets()) {
-            inputs.latestTargetObservation = new PoseObservation(result.getBestTarget().fiducialId,result.getBestTarget().bestCameraToTarget.getTranslation(), result.getBestTarget().getYaw());
+            inputs.latestTargetObservation =
+                new PoseObservation(result.getBestTarget().fiducialId,result.getBestTarget().bestCameraToTarget.getTranslation().toTranslation2d(), result.getBestTarget().getYaw());
         }else{
-            inputs.latestTargetObservation = new PoseObservation(0,new Translation3d(),0);
+            inputs.latestTargetObservation = new PoseObservation(0, new Translation2d(), 0);
             }
         inputs.lastestTagID = inputs.latestTargetObservation.tagID();
-        inputs.distanceFromTarget = inputs.latestTargetObservation.translation3d().getNorm();
+        inputs.distanceFromTarget = inputs.latestTargetObservation.translation2d().getNorm();
         inputs.yaw = inputs.latestTargetObservation.yaw();
-
-
-
         }
 
 }
